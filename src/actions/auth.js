@@ -19,9 +19,11 @@ export const login = ({ userName, password }) => dispatch => {
 
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     console.log('登录')
-    dispatch(loading())
+   // dispatch(loading())
+    
     // return dispatch(logined('qwerfasdfasdfasdfasdfasfd'))
     return fetch(window.TParams.urls.login, args).then(response => {
+        console.log(response)
         return (response.json())
     })
         .then(json => {

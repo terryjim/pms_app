@@ -3,9 +3,11 @@ export const checkStatus=response=>{
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+  alert(1)
   const error = new Error(response.statusText);
   error.response = response;
-  throw error;
+  //throw error;
+ // return dispatch(showError('网络异常，请稍后再试！<br/>' + error))
 }
 //页面刷新中
 export const loading = () => (

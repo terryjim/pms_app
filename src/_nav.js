@@ -14,9 +14,9 @@ export default {
 
     {
       title: true,
-      name: '楼盘管理',
+      name: '楼栋信息管理',
       wrapper: {            // optional wrapper object
-        element: '楼盘管理',        // required valid HTML5 element tag
+        element: '楼栋信息管理',        // required valid HTML5 element tag
         attributes: {style: {fontSize: 15,color:"#8bc34a"}}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       //url: '/base',
@@ -29,22 +29,17 @@ export default {
       //class: 'h3' 
     },  
         {
-          name: '楼盘设置',
+          name: '楼栋列表',
           url: '/project/project',
           icon: 'icon-layers',
-        },
-        {
-          name: '楼栋设置',
-          url: '/project/building',
-          icon: 'icon-chart',
-        }     
+        }   
    ,
   
     {
       title: true,
-      name: '物业公司管理',
+      name: '企业管理',
       wrapper: {            // optional wrapper object
-        element: '物业公司管理',        // required valid HTML5 element tag
+        element: '企业管理',        // required valid HTML5 element tag
         attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       //url:'/theme',
@@ -56,21 +51,125 @@ export default {
       //class: '',             // optional class names space delimited list for title item ex: "text-center"
     },
       {
-        name: '物业公司设置',
+        name: '企业列表',
         url: '/property/setting',
         icon: 'icon-settings',
       },
       {
-        name: '项目部设置',
+        name: '企业入驻',
         url: '/property/department',
         icon: 'icon-location-pin',
-      },{
-        name: '物业楼盘分配',
-        url: '/property/allot',
-        icon: 'icon-equalizer',
       },
-    
-    
+      {
+        title: true,
+        name: '住宅管理',
+        wrapper: {            // optional wrapper object
+          element: '住宅管理',        // required valid HTML5 element tag
+          attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+        },
+        //url:'/theme',
+        /* wrapper: {            // optional wrapper object
+          element: '',        // required valid HTML5 element tag
+          attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+        }, */
+       // icon: 'icon-energy',
+        //class: '',             // optional class names space delimited list for title item ex: "text-center"
+      },
+        {
+          name: '住宅列表',
+          url: '/property/setting',
+          icon: 'icon-settings',
+        },
+        {
+          name: '导入业主',
+          url: '/property/department',
+          icon: 'icon-location-pin',
+        },
+        {
+          title: true,
+          name: '门禁管理',
+          wrapper: {            // optional wrapper object
+            element: '门禁管理',        // required valid HTML5 element tag
+            attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+          },
+          //url:'/theme',
+          /* wrapper: {            // optional wrapper object
+            element: '',        // required valid HTML5 element tag
+            attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+          }, */
+         // icon: 'icon-energy',
+          //class: '',             // optional class names space delimited list for title item ex: "text-center"
+        },
+          {
+            name: '门禁列表',
+            url: '/property/setting',
+            icon: 'icon-settings',
+          },
+          {
+            title: true,
+            name: '停车管理',
+            wrapper: {            // optional wrapper object
+              element: '停车管理',        // required valid HTML5 element tag
+              attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+            },
+            //url:'/theme',
+            /* wrapper: {            // optional wrapper object
+              element: '',        // required valid HTML5 element tag
+              attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+            }, */
+           // icon: 'icon-energy',
+            //class: '',             // optional class names space delimited list for title item ex: "text-center"
+          },
+            {
+              name: '停车道闸列表',
+              url: '/property/setting',
+              icon: 'icon-settings',
+            },
+            {
+              title: true,
+              name: '公告管理',
+              wrapper: {            // optional wrapper object
+                element: '公告管理',        // required valid HTML5 element tag
+                attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+              },
+              //url:'/theme',
+              /* wrapper: {            // optional wrapper object
+                element: '',        // required valid HTML5 element tag
+                attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+              }, */
+             // icon: 'icon-energy',
+              //class: '',             // optional class names space delimited list for title item ex: "text-center"
+            },
+              {
+                name: '公告列表',
+                url: '/property/setting',
+                icon: 'icon-settings',
+              },
+              {
+                title: true,
+                name: '物业管家',
+                wrapper: {            // optional wrapper object
+                  element: '物业管家',        // required valid HTML5 element tag
+                  attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+                },
+                //url:'/theme',
+                /* wrapper: {            // optional wrapper object
+                  element: '',        // required valid HTML5 element tag
+                  attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+                }, */
+               // icon: 'icon-energy',
+                //class: '',             // optional class names space delimited list for title item ex: "text-center"
+              },
+                {
+                  name: '工单管理',
+                  url: '/property/setting',
+                  icon: 'icon-settings',
+                },
+                {
+                  name: '客服定理',
+                  url: '/property/department',
+                  icon: 'icon-location-pin',
+                },
     {
       title: true,
       name: 'Theme',
