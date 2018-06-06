@@ -1,38 +1,30 @@
-import { loaded, loading, showError } from "./common";
+import { loaded, loading, showError,checkStatus } from "./common";
 //是否登录成功
-export const logined = ({ token, userName, expired }) => ({
+export const logined = ({ token, userName, expired, propertyId, propertyProjectId, companyName }) => ({
     type: 'LOGINED',
     token,
     userName,
-    expired
+    expired, propertyId, propertyProjectId, companyName
 })
 export const login = ({ userName, password }) => dispatch => {
     window.sessionStorage.accessToken = ''
-    //不能用headers=new Headers()，否则跨域出错
-    /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
-
-    //headers.Authorization = WebIM.config.tokenLocal
     let body = JSON.stringify({
         userName, password
     })
-
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     console.log('登录')
-   // dispatch(loading())
-    
-    // return dispatch(logined('qwerfasdfasdfasdfasdfasfd'))
+    dispatch(loading())
     return fetch(window.TParams.urls.login, args).then(response => {
-        console.log(response)
         return (response.json())
     })
         .then(json => {
             console.log(json)
             if (json.access_token != null && json.access_token != '') {
                 console.log('登录成功')
-                window.sessionStorage.accessToken = 'Bearer '+json.access_token
+                window.sessionStorage.accessToken = 'Bearer ' + json.access_token
                 dispatch(loaded())
-                return dispatch(logined({ token: 'Bearer '+json.access_token, userName, expired: new Date().getTime() + 1000 * json.expires_in }))
+                return dispatch(logined({ token: 'Bearer ' + json.access_token, userName, propertyId: json.propertyId, propertyProjectId: json.propertyProjectId, companyName: json.companyName, expired: new Date().getTime() + 1000 * json.expires_in }))
             }
             if (json.status === 500) {
                 console.log(json)
@@ -57,12 +49,13 @@ export const loginOut = () => {
 
 
 //修改密码
-export const chgPwd = ({oldPassword, newPassword }) => dispatch => {
+export const chgPwd = ({ oldPassword, newPassword }) => dispatch => {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
 
     headers.Authorization = window.sessionStorage.accessToken
+    console.log(window.sessionStorage.accessToken)
     let body = JSON.stringify({
         oldPassword, newPassword
     })
@@ -79,9 +72,36 @@ export const chgPwd = ({oldPassword, newPassword }) => dispatch => {
                 alert('旧密码不正确，请重新输入！')
                 return null
             }
+            return ('网络异常，密码修改失败，请稍后再试！')
         }).catch(e => {
             console.log(e);
             alert('网络异常，密码修改失败，请稍后再试！')
+        }
+        )
+}
+
+//获取当前登录用户信息
+export const getUserInfo = () => dispatch => {
+    let headers = { 'Content-Type': 'application/json' };
+    if (window.sessionStorage.accessToken == undefined || window.sessionStorage.accessToken == null)
+        return dispatch(loginOut())
+    headers.Authorization = window.sessionStorage.accessToken
+
+    let args = { method: 'POST', mode: 'cors', headers: headers, cache: 'reload' }
+
+
+    return fetch(window.TParams.urls.getUserInfo, args).then(checkStatus).then(response => response.json())
+        .then(json => {
+            console.log(json)
+            if (json.code !== 0)
+                return dispatch(showError(json.msg + '<br>' + json.data))
+            else {
+                let data = json.data
+                return dispatch(logined({ propertyId: data.propertyId, propertyProjectId: data.propertyProjectId, companyName: data.companyName }))
+            }
+
+        }).catch(e => {
+            return dispatch(showError('系统异常，请稍后再试！<br/>' + e))
         }
         )
 }

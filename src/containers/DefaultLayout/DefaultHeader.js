@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink,Col } from 'reactstrap';
 import PropTypes from 'prop-types';
 
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
-import {chgPwd} from '../../actions/auth'
-
+import {chgPwd,getUserInfo} from '../../actions/auth'
 const propTypes = { 
   children: PropTypes.node,
 };
@@ -14,6 +14,10 @@ const propTypes = {
 const defaultProps = {};
 
 class DefaultHeader extends Component {
+  componentWillMount(){
+    if(this.props.user==null)
+      this.props.dispatch(getUserInfo())
+  }
   render() {
 
     // eslint-disable-next-line
@@ -27,7 +31,7 @@ class DefaultHeader extends Component {
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
-        <div style={{fontSize: 22,color:'#8bc34a'}}>&nbsp;&nbsp;&nbsp;&nbsp;物业管理平台 </div>
+        <div style={{fontSize: 20,color:'#8bc34a'}}>&nbsp;&nbsp;&nbsp;&nbsp;物业管理平台——{this.props.user==null?'':this.props.user.companyName}</div>
        {/*  <Nav className="d-md-down-none" navbar>
           <NavItem className="px-3">
             <NavLink href="/">Dashboard</NavLink>
@@ -80,4 +84,15 @@ class DefaultHeader extends Component {
 DefaultHeader.propTypes = propTypes;
 DefaultHeader.defaultProps = defaultProps;
 
+//获取Department记录集及修改记录ＩＤ数组
+const mapStateToProps = (state) => {
+  let user = state.user
+return {user}
+}
+
+
+DefaultHeader = connect(
+  mapStateToProps
+)(DefaultHeader)
 export default DefaultHeader;
+

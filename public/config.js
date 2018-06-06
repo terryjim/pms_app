@@ -1,9 +1,15 @@
-const defaultUrl = "http://localhost/"
+const defaultUrl = "http://localhost:81/"
 //const defaultUrl = "http://192.168.3.153/"
 const TParams = {
     defaultUrl,
     defaultPageSize:20,
     urls: {
+        getUserInfo:defaultUrl+'user/getUserInfo',//获取用户详细信息
+       // get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
+        login:defaultUrl + 'auth/login',
+        chgPwd:defaultUrl + 'auth/chgPwd',
+        ///////////////////////////////////////以下无用，后续删除！！！
+        //////////////////////////////////////
         /* get_project_list: defaultUrl + 'project/getByPage',
         save_project: defaultUrl + 'project/save',
         del_project: defaultUrl + 'project/del', */
@@ -13,11 +19,10 @@ const TParams = {
      
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',
-        get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
-        login:defaultUrl + 'auth/login',
-        chgPwd:defaultUrl + 'auth/chgPwd',
+     
         getProjectList:defaultUrl +'project/getList',//获取楼盘列表
         getPropertyList:defaultUrl +'property/getList',//获取物业公司列表
+       
     }
 }
 window.TParams = TParams
