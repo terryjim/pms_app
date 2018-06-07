@@ -30,7 +30,7 @@ export default {
     },  
         {
           name: '楼栋列表',
-          url: '/project/project',
+          url: '/project/building',
           icon: 'icon-layers',
         }   
    ,

@@ -4,321 +4,132 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import { initRooms } from '../actions/building'
-import { InputField, SelectField, InlineField } from '../components/field'
+import Widget from '../components/Widget'
+import { InputField, SelectField, InlineField, } from '../components/field'
 import RoomEditableTable from '../components/RoomEditableTable.js'
-const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
-  <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
-)
-const number = value =>
-  value && isNaN(Number(value)) ? '请输入数字' : undefined
-const renderAreas = ({ readOnly, fields, meta: { error, submitFailed } }) => (
-  <Container>
-    <FormGroup row>
-      <Col md="9">
-        <Label>&nbsp;&nbsp;&nbsp;&nbsp;公共区域</Label>
-      </Col>
-      <Col md="3">
-        <Button block color="primary" hidden={readOnly} onClick={() => fields.push({})}>
-          添加
-      </Button>
-        {submitFailed && error && <span>{error}</span>}
-      </Col>
-    </FormGroup>
-    {fields == undefined ? '' : fields.map((member, index) => (
-      <ListGroup>
-        <Col md="1" />
-        <Col md="11">
-          <InputGroup>
-            <Field
-              name={`${member}.id`}
-              type="hidden"
-              component={InputField}
-              readOnly={readOnly}
-              label={null}
-            />
-            <Field
-              name={`${member}.name`}
-              type="text"
-              label={null}
-              readOnly={readOnly}
-              component={simpleField}
-            />
-            <InputGroupAddon addonType="append">
-              <Button color="danger" hidden={readOnly}
-                onClick={() => fields.remove(index)}
-              >删除</Button>
-            </InputGroupAddon>
-          </InputGroup>
-        </Col>
-      </ListGroup>
-    ))}
 
-  </Container>
-)
-
-
-const validate = values => {
-  const errors = {}
-  if (!values.projectId) {
-    errors.projectId = '请选择楼盘'
+class EditBuildingForm extends Component {
+  componentWillMount() {
   }
-  if (!values.name) {
-    errors.name = '楼栋名称不能为空'
+  componentWillReceiveProps(nextProps) {
+    //确认删除记录操作    
+    /* if (nextProps.confirmDel) {
+      this.props.dispatch(delList(this.state.selection, 'project'))
+    } */
   }
-  if (!values.category) {
-    errors.category = '楼栋类型不能为空'
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedUnit: -1,//选中的单元号index
+      selectedFloor: -1,//选中的楼层号index
+      selectedUnitName: '',
+      selectedFloorName: '',
+      floors: [],   //选中的单元号楼层数组
+      rooms: [],//选中的单元号楼层房间数组      
+    };
   }
-  if (isNaN(Number(values.units))) {
-    errors.units = '单元必须为整数'
+  validate = values => {
+    const errors = {}
+    return errors
   }
-  if (isNaN(Number(values.floors))) {
-    errors.floors = '楼层必须为整数'
+  selectUnit = (event) => {//更改单元后填充楼层信息 
+    let unit = event.target.value
+    this.setState({ selectedUnit: unit })   //记录选中单元信息
+    this.setState({ selectedUnitName: this.props.initialValues._original.structure[unit].unit })
+    this.setState({ floors: this.props.initialValues._original.structure[unit].floors })
   }
-  if (isNaN(Number(values.rooms))) {
-    errors.rooms = '楼层房间数必须为整数'
-  }
-  return errors
-}
-
-
-
-let EditBuildingForm = props => {
-  const { projectList, structureValue, readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, assignRooms, unitsValue, floorsValue, roomsValue } = props;
-  console.log('##############################')
-  console.log(projectList)
-  //房间分配初始值，编辑表单时不为空
-  let structureArr = new Array(10).fill({})
-  //子组件RoomEditableTable返回值
-  let getRooms = (values) => {
-    //  alert(structureValue)
-    console.log(values)
-    /* if (structureValue == undefined) {
-       let tempStrucArr=new Array(unitsValue).fill({})
-        dispatch(change('building', 'structure',tempStrucArr))     
-     } *///else
-    // dispatch(change('building', 'structure', structureArr.splice(values.unit - 1, 1, values.data)))
-    /*  let arr = new Array(1).fill({})
-     arr[0] = { unit: values.unit, floors: values.data }
-     dispatch(change('building', 'structure', arr)) */
-
-    if (structureValue == undefined) {
-      let arr = new Array(unitsValue).fill({})
-      arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
-      dispatch(change('building', 'structure', arr))
-    } else {
-      let arr = structureValue
-      arr[values.unit - 1] = { unit: values.unit, floors: values.floors }
-      dispatch(change('building', 'structure', arr))
-    }
-    /*  dispatch(change('building', 'structure',[
-      {
-          "unit":"1",
-          "floors":[
-              {"name":"1号楼","rooms":[1,2,3]},
-              {"name":"2号楼","rooms":[1,2,3]}
-          ]
-      }
-  ])) */
-
-    console.log(structureValue)
-  }
-  // console.log(initialValues)
-  let handleSelect = (area) => {
-    //dispatch(change('building', 'address', JSON.stringify({p:area.province,c:area.city,d:area.area})))
-    dispatch(change('building', 'address', { p: area.province, c: area.city, d: area.area }))
+  selectFloor = (event) => {//更改单元后填充楼层信息
+    let floor = event.target.value
+    this.setState({ selectedFloor: floor })
+    this.setState({ selectedFloorName: this.state.floors[floor].name })
+    this.setState({ rooms: this.state.floors[floor].rooms })
   }
 
-  return (
-    <form onSubmit={handleSubmit} >
+  render() {
+    const { readOnly = false, values, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = this.props;
+    let structure = initialValues._original.structure;
+    if (structure === undefined)
+      structure = []
 
-      <Field name="id" component="input" type="hidden" label="id" />
-      {/*   <Label>所在地区</Label>
-       <Cities handleSelect={handleSelect} initValue={initialValues.address}/> */}
-      <Field name="id" component="input" type="hidden" label="id" />
-      <Container><FormGroup row>
-        <Label sm={3} for="projectId">楼盘名称</Label>
-        <Col sm={9}>
-          <Field name="projectId" component="select"  >
-            <option value="">请选择楼盘</option>
-            {projectList != undefined ?
-              projectList.map(pro => (
-                <option value={pro.id} key={pro.id}>
-                  {pro.name}
+    return (
+      <form onSubmit={handleSubmit} >
+
+        <Field name="id" component="input" type="hidden" label="id" />
+        <Label>{initialValues.name}</Label>
+        <Container><FormGroup row>
+          <Label sm={3} for="unit">单元号</Label>
+          <Col sm={3}>
+            <div onChange={this.selectUnit}><Field name="unit" component="select" >
+              <option value="">请选择单元</option>
+              {structure.map((struc, index) => (
+                <option value={index} key={index}>
+                  {struc.unit}
                 </option>
-              )) : ''}
-          </Field>
-        </Col>
-      </FormGroup></Container>
-      <Field readOnly={readOnly}
-        name="projectId"
-        component={InputField}
-        type="hidden"
-        label="楼盘名称"
-      // parse={(value, name)=>({property:{id:value}})}
-      // normalize={value=>({id:value})}
-      />
-
-
-
-      {/*    <Field readOnly={readOnly}
-        name="projectId"
-        component={InlineField}
-        type="text"
-        label="楼盘名称"
-      /> */}
-      <Field readOnly={readOnly}
-        name="name"
-        component={InlineField}
-        type="text"
-        label="楼栋名称"
-      />
-      <FormGroup row>
-        <Col md="3">
-          <Label>&nbsp;&nbsp;&nbsp;&nbsp;楼栋类型</Label>
-        </Col>
-        <Col md="9">
-          <FormGroup check inline>
-            <Field className="form-check-input"
-              name="category"
-              component="input"
-              type="radio"
-              value="1"
-            />{' '}
-            社区{'  '}
-          </FormGroup>
-          <FormGroup check inline>
-            <Field className="form-check-input"
-              name="category"
-              component="input"
-              type="radio"
-              value="2"
-            />{' '}
-            商办{'  '}
-          </FormGroup>
-          <FormGroup check inline>
-            <Field className="form-check-input"
-              name="category"
-              component="input"
-              type="radio"
-              value="3"
-            />{' '}
-            社区与商办
-            </FormGroup>
-        </Col>
-      </FormGroup>
-
-      <Field readOnly={readOnly}
-        name="category"
-        component={InputField}
-        type="hidden"
-        label="楼栋类型"
-      />
-      <FieldArray name="publicArea" component={renderAreas} readOnly={readOnly} />
-      <hr />
-      <Container>
-        <Row><Col>
-          <label >单元数量&nbsp;&nbsp;</label>
-          <Field readOnly={readOnly}
-            name="units"
-            component='input'
-            type="text"
-            style={{ 'width': 100 }}
-            validate={[number]}
-          />
-        </Col><Col>
-            <label >楼层数量&nbsp;&nbsp;</label>
-            <Field readOnly={readOnly}
-              name="floors"
-              component='input'
-              type="text"
-              style={{ 'width': 100 }}
-              validate={[number]}
-            /></Col><Col>
-            <label >楼层房间数&nbsp;&nbsp;</label>
-            <Field readOnly={readOnly}
-              name="rooms"
-              component='input'
-              type="text"
-              style={{ 'width': 100 }}
-              validate={[number]}
-            />  </Col><Col>
-            <Button block color="primary" hidden={readOnly} onClick={(values) => {
-              console.log(values)
-              /* alert(values.units)
-              alert(values.floors)
-              alert(values.rooms)
-             dispatch(initRooms(values.units,values.floors,values.rooms)) */
-              if (unitsValue == undefined) {
-                alert('请输入单元数')
-                return
-              }
-              if (floorsValue == undefined) {
-                alert('请输入楼层数')
-                return
-              }
-              if (roomsValue == undefined) {
-                alert('请输入每层房间数')
-                return
-              }
-              structureArr = new Array(unitsValue).fill({})
-              dispatch(initRooms(parseInt(unitsValue), parseInt(floorsValue), parseInt(roomsValue)))
-            }} >批量创建</Button>
+              ))}
+            </Field></div>
           </Col>
-        </Row></Container>
-      <Container>
-        <hr />
-        <Row>
-          {
-            assignRooms.map(x => {
-              console.log(x)
-              return (
-                <Col ><Label>{x.unit}单元</Label>
-                  <RoomEditableTable unit={x.unit} data={x.floors} handleTableValues={getRooms} />
-                </Col>)
-            })}
-        </Row></Container>
+          <Label sm={3} for="floors">楼层号</Label>
+          <Col sm={3}>
+            <div onChange={this.selectFloor}><Field name="floor" component="select">
+              <option value="">请选择楼层单元</option>
+              {this.state.floors.map((f, index) => (
+                <option value={index} key={f.name}>
+                  {f.name}
+                </option>
+              ))}
+            </Field>
+            </div>
+          </Col>
+        </FormGroup></Container>
 
-      <Field readOnly={readOnly}
-        name="structure"
-        component={InlineField}
-        type="hidden"
-        height='130px'
-        label="房间分配"
-      />
-      <Field readOnly={readOnly}
-        name="remark"
-        component={InlineField}
-        type="textarea"
-        height='130px'
-        label="备注"
-      />
-      <Row className="align-items-center">
-        <Col col='9' />
-        <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="primary" hidden={readOnly} type="submit" disabled={submitting}>提交</Button>
-        </Col>
-        {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+        <Label>{this.state.rooms}</Label>
+        ////////////////////////
+        <Row>
+          {this.state.rooms.map(room => {
+            return (
+              <Col sm="6" md="2">
+                <Widget icon="icon-user-follow" color="success" value="25" invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room}>New Clients</Widget>
+              </Col>)
+          })}
+          {/* <Col sm="6" md="2">
+            <Widget icon="icon-people" color="info" header="87.500" value="25" invert>Visitors</Widget>
+          </Col>
+          <Col sm="6" md="2">
+            <Widget icon="icon-user-follow" color="success" header="385" value="25" invert>New Clients</Widget>
+          </Col>
+          <Col sm="6" md="2">
+            <Widget icon="icon-basket-loaded" color="warning" header="1238" value="25" invert>Products sold</Widget>
+          </Col>
+          <Col sm="6" md="2">
+            <Widget icon="icon-pie-chart" color="primary" header="28%" value="25" invert>Returning Visitors</Widget>
+          </Col>
+          <Col sm="6" md="2">
+            <Widget icon="icon-speedometer" color="danger" header="5:34:11" value="25" invert>Avg. Time</Widget>
+          </Col>
+          <Col sm="6" md="2">
+            <Widget icon="icon-speech" color="info" header="972" value="25" invert>Comments</Widget>
+          </Col> */}
+        </Row>
+
+
+        ///////////////////////
+        <Row className="align-items-center">
+          <Col col='9' />
+          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+            <Button block color="primary" hidden={readOnly} type="submit" disabled={submitting}>提交</Button>
+          </Col>
+          {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
               </Col>     */}
-        <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="danger" onClick={closeForm}>关闭</Button>
-        </Col>
-      </Row>
-      {/*  <div>
-        <button hidden={readOnly} type="submit" disabled={pristine || submitting}>
-          提交
-        </button>
-        <button hidden={readOnly} type="button" disabled={pristine || submitting} onClick={reset}>
-          重置还原
-        </button>
-        <button type="button" onClick={() => dispatch(showError('err!!!!!!!'))}>
-          关闭
-        </button>
-      </div> */}
-    </form>
-  );
-}
+          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+            <Button block color="danger" onClick={closeForm}>关闭</Button>
+          </Col>
+        </Row>
 
+      </form>
+    );
+  }
+}
 
 
 
@@ -326,26 +137,14 @@ let EditBuildingForm = props => {
 // Decorate the form component
 EditBuildingForm = reduxForm({
   form: 'building', // a unique name for this form
-  validate,                // redux-form同步验证 
+  //validate,                // redux-form同步验证 
 })(EditBuildingForm);
-const selector = formValueSelector('building')
+/* const selector = formValueSelector('building') */
 const mapStateToProps = (state) => {
-  let projectList = state.projectList
- 
-  let cFormData = state.cForm.data
-  let assignRooms = state.assignRooms
-  let initialValues = {}
-  if (cFormData != undefined && cFormData != null && cFormData._original != undefined)
-    initialValues = { ...cFormData._original, category: "" + cFormData._original.category, projectId: cFormData._original.projectId } // 单选框选中状态必须为字符串，所以要将数字加引号
-  if (assignRooms == undefined)
-    assignRooms = []
-  const structureValue = selector(state, 'structure')
-  const unitsValue = selector(state, 'units')
-  const floorsValue = selector(state, 'floors')
-  const roomsValue = selector(state, 'rooms')
-  
-  console.log(projectList);
-  return { initialValues, assignRooms, structureValue, unitsValue, floorsValue, roomsValue, projectList }
+  let initialValues = state.cForm.data
+  initialValues.unit = ''
+  initialValues.floors = ''
+  return { initialValues }
 
 }
 
