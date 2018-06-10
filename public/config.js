@@ -8,6 +8,7 @@ const TParams = {
        // get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
         login:defaultUrl + 'auth/login',
         chgPwd:defaultUrl + 'auth/chgPwd',
+        getInhabitantsByRoom:defaultUrl+'',
         ///////////////////////////////////////以下无用，后续删除！！！
         //////////////////////////////////////
         /* get_project_list: defaultUrl + 'project/getByPage',
@@ -15,7 +16,7 @@ const TParams = {
         del_project: defaultUrl + 'project/del', */
        get_department_buildings_list:defaultUrl + 'department/getDepartmentsAndBuildings', //视图v_building获取楼盘、楼栋、物业、项目部信息列表
        getBuildingsByProject:defaultUrl + 'building/getBuildingsByProject',  //根据楼盘id获取所辖楼栋列表
-       allotBuildings :defaultUrl + 'building/allot', //绑定楼栋－－物业项目部
+   
      
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',

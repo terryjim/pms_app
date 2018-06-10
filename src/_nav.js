@@ -33,7 +33,7 @@ export default {
           url: '/project/building',
           icon: 'icon-layers',
         }   
-   ,
+   , 
   
     {
       title: true,

@@ -6,7 +6,7 @@ import { showError } from '../actions/common'
 import { initRooms } from '../actions/building'
 import Widget from '../components/Widget'
 import { InputField, SelectField, InlineField, } from '../components/field'
-import RoomEditableTable from '../components/RoomEditableTable.js'
+
 
 class EditBuildingForm extends Component {
   componentWillMount() {

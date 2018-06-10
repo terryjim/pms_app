@@ -6,10 +6,6 @@ import DefaultLayout from './containers/DefaultLayout';
 function Loading() {
   return <div>Loading...</div>;
 }
-const Project= Loadable({
-  loader: () => import('./views/Project'),
-  loading: Loading,
-})
 const Building= Loadable({
   loader: () => import('./views/Building'),
   loading: Loading,
@@ -18,14 +14,7 @@ const Property= Loadable({
   loader: () => import('./views/Property'),
   loading: Loading,
 })
-const Department= Loadable({
-  loader: () => import('./views/Department'),
-  loading: Loading,
-})
-const DepartmentAndBuildings= Loadable({
-  loader: () => import('./views/DepartmentAndBuildings'),
-  loading: Loading,
-})
+
 
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
@@ -197,18 +186,13 @@ const Widgets = Loadable({
 const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/project', exact: true, name: '楼盘管理',component: Project  },
-  { path: '/project/project', name: '楼盘管理', component: Project },
+ 
   { path: '/project/building', name: '楼栋管理', component: Building },
 
-  { path: '/property', exact: true, name: '物业公司管理', component: Property },
-  { path: '/property/setting', name: '物业公司设置', component: Property },
-  { path: '/property/department', name: '项目部设置', component: Department },
-  { path: '/property/allot', name: '物业楼盘分配', component: DepartmentAndBuildings }, 
-
+ 
 
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
-  { path: '/theme/colors', name: '楼盘管理', component: Project },
+  
   { path: '/theme/typography', name: '楼栋管理', component: Building },
   { path: '/base', exact: true, name: 'Base', component: Cards },
   { path: '/base/cards', name: 'Cards', component: Cards },
