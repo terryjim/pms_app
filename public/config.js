@@ -1,5 +1,5 @@
-const defaultUrl = "http://localhost:81/"
-//const defaultUrl = "http://192.168.3.153/"
+//const defaultUrl = "http://localhost:81/"
+const defaultUrl = "http://192.168.10.153:81/"
 const TParams = {
     defaultUrl,
     defaultPageSize:20,
@@ -8,7 +8,7 @@ const TParams = {
        // get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
         login:defaultUrl + 'auth/login',
         chgPwd:defaultUrl + 'auth/chgPwd',
-        getInhabitantsByRoom:defaultUrl+'',
+        getInhabitantsByRoom:defaultUrl+'inhabitant/getByRoom',
         ///////////////////////////////////////以下无用，后续删除！！！
         //////////////////////////////////////
         /* get_project_list: defaultUrl + 'project/getByPage',

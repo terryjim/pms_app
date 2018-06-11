@@ -4,7 +4,8 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import { initRooms } from '../actions/building'
-import Widget from '../components/Widget'
+import RoomWidget from '../components/RoomWidget'
+
 import { InputField, SelectField, InlineField, } from '../components/field'
 
 
@@ -37,6 +38,7 @@ class EditBuildingForm extends Component {
     this.setState({ selectedUnit: unit })   //记录选中单元信息
     this.setState({ selectedUnitName: this.props.initialValues._original.structure[unit].unit })
     this.setState({ floors: this.props.initialValues._original.structure[unit].floors })
+ 
   }
   selectFloor = (event) => {//更改单元后填充楼层信息
     let floor = event.target.value
@@ -88,7 +90,7 @@ class EditBuildingForm extends Component {
           {this.state.rooms.map(room => {
             return (
               <Col sm="6" md="2">
-                <Widget icon="icon-user-follow" color="success" value="25" invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room}>New Clients</Widget>
+                <RoomWidget key={room} icon="icon-user-follow" color="success" value="55" buildingId={initialValues.id} unit={this.state.selectedUnitName} floor={this.state.selectedFloorName} room={room} invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room} />
               </Col>)
           })}
           {/* <Col sm="6" md="2">

@@ -4,7 +4,7 @@ export const getInhabitantsByRoom = (values) =>dispatch=> {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
-    //values:{buildingId:...,unit:...,floor:...,room:...}
+    headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(values)
   
     let args = { method: 'POST', mode: 'cors', body,headers, cache: 'reload' }
@@ -18,18 +18,19 @@ export const getInhabitantsByRoom = (values) =>dispatch=> {
             }
             else {
                 console.log(json.data)
-                dispatch(fillProjectList(json.data))
+                dispatch(fillInhabitants(values,json.data))
             }
         }).catch(e => {
             return dispatch(showError('网络异常，获取楼盘列表出错，请稍后再试！<br/>' + e))
         })
 }
 //新增或修改后的记录更新列表
-export const fillProjectList = (values) => {
+export const fillInhabitants = (location,values) => {
     console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
     console.log(values)
     return {
-        type: 'FILL_PROJECT_LIST',
-        data: values
+        type: 'FILL_INHABITANTS_BY_ROOM',
+        data: values,
+        location
     }
 }

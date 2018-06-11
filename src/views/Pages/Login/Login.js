@@ -73,7 +73,7 @@ class Login extends Component {
                     <p><img src={process.env.PUBLIC_URL + '/logo.svg'} style={{ width: 50 + '%',height:50 + '%' }} /></p>
                       
                       <h1/><h1/>
-                      <h2>智生活系统管理平台</h2>
+                      <h2>智生活物业管理平台</h2>
                       {/* <Button color="primary" className="mt-3" active>Register Now!</Button> */}
                     </div>
                   </CardBody>
