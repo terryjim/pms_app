@@ -1,4 +1,4 @@
-import { loaded, loading, showError,checkStatus } from "./common";
+import { loaded, loading, showError, checkStatus } from "./common";
 //是否登录成功
 export const logined = ({ token, userName, expired, propertyId, propertyProjectId, companyName }) => ({
     type: 'LOGINED',
@@ -13,11 +13,15 @@ export const login = ({ userName, password }) => dispatch => {
         userName, password
     })
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
-    console.log('登录')
+  
     dispatch(loading())
-    return fetch(window.TParams.urls.login, args).then(response => {
-        return (response.json())
-    })
+    return Promise.race([
+        fetch(window.TParams.urls.login, args),
+        new Promise(function (resolve, reject) {
+            setTimeout(() => reject(new Error('网络超时，请稍后再试！')), 30000)
+        })]).then(checkStatus).then(response => {          
+            return (response.json())
+        })
         .then(json => {
             console.log(json)
             if (json.access_token != null && json.access_token != '') {
@@ -34,6 +38,7 @@ export const login = ({ userName, password }) => dispatch => {
                 return dispatch(loaded())
             }
         }).catch(e => {
+            alert(e)
             return dispatch(showError('网络异常，请稍后再试！<br/>' + e))
             return dispatch(loaded())
         }

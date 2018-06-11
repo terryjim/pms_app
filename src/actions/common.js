@@ -1,11 +1,13 @@
 //判断返回状态码
 export const checkStatus=response=>{
+    alert(response.status)
   if (response.status >= 200 && response.status < 300) {
     return response;
   } 
   const error = new Error(response.statusText);
   error.response = response;
-  //throw error;
+  alert(error)
+  throw error
  // return dispatch(showError('网络异常，请稍后再试！<br/>' + error))
 }
 //页面刷新中
@@ -121,64 +123,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')
-        getUrl = window.TParams.defaultUrl + module + '/getByPage'
-    //getUrl ="http://localhost/admin/getByPage"
-    console.log(getUrl)
-    ////////////////////////////////
-    //以下部分为测试数据用，API调整好后请删除
-    /* let sample = {
-        "content": [
-            {
-                "id":"195884804934228449",
-                "name":"坐标城",
-                "category":"1",
-                "public_area":[
-                    {
-                        "id":1,
-                        "name":"大门口"
-                    },
-                    {
-                        "id":14,
-                        "name":"花坛"
-                    }
-                ],
-                "address":{
-                    "c":"武汉市",
-                    "d":"东湖高新区",
-                    "p":"湖北省"
-                },
-                "remark":"楼盘描述1坐标城6xiugai"
-            },{
-                "id":"195874794355317217",
-                "name":"光谷新世1",
-                "category":"1",
-                "public_area":[
-                    {
-                        "id":1,
-                        "name":"公共区域A"
-                    }
-                ],
-                "address":{
-                    "c":"太原市",
-                    "d":"迎泽区",
-                    "p":"山西省"
-                },
-                "remark":"楼盘描述12"
-            }
-       
-        ],
-        "totalElements": 1,
-        "totalPages": 1,
-        "last": true,
-        "number": 0,
-        "size": 20,
-        "sort": null,
-        "first": true,
-        "numberOfElements": 2
-    }
-    return dispatch(getListResult(sample)) */
-      //以上部分为测试数据用，API调整好后请删除
-    ////////////////////////////////
+        getUrl = window.TParams.defaultUrl + module + '/getByPage'    
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
             console.log(json)
