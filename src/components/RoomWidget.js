@@ -27,18 +27,27 @@ const defaultProps = {
 
 class RoomWidget extends Component {
   constructor(props) {
+    console.log("constructorconstructorconstructorconstructorconstructorconstructorconstructor")
     super(props);
-    let inhabitantList = this.props.inhabitantList
+    this.state = {
+      //num: 0,//选中的单元号楼层房间绑定用户数    
+      inhabitants: [],
+    };
+    let inhabitantList = this.props.inhabitantList //现有store中居民库
     let { buildingId, unit, floor, room } = this.props
+    //如果现有store中没有当前房号则从数据库加载数据
     if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {
       this.props.dispatch(getInhabitantsByRoom({ buildingId, unit, floor, room }))
+    } else {
+      this.setState({
+        inhabitants: inhabitantList[inhabitantList.findIndex(value => {
+          return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
+        })].inhabitants
+      })     
     }
-    this.state = {
-      num: 0,//选中的单元号楼层房间绑定用户数    
-      inhabitants: [],
-    };
+
     /* 
     
     
@@ -55,18 +64,12 @@ class RoomWidget extends Component {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {
       this.props.dispatch(getInhabitantsByRoom({ buildingId, unit, floor, room }))
-    }
-    if (inhabitantList === undefined) {
-      this.setState({ inhabitants: [] })
-    }
-    else {
-      let index = inhabitantList.findIndex(value => {
-        return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
+    } else {
+      this.setState({
+        inhabitants: inhabitantList[inhabitantList.findIndex(value => {
+          return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
+        })].inhabitants
       })
-      if (index > -1){
-        this.setState({ inhabitants: inhabitantList[index].inhabitants })
-        //alert(JSON.stringify(inhabitantList[index].inhabitants))
-      }
     }
   }
   render() {
@@ -90,14 +93,14 @@ class RoomWidget extends Component {
     progress.style = classNames('progress-xs mt-3 mb-0', progress.style);
 
     return (
-      <Card className={classes} {...attributes}>
+      <Card color={this.state.inhabitants===undefined||this.state.inhabitants.length===0?'danger':'info'} className={classes} {...attributes}>
         <CardBody>
           <div className="h1 text-muted text-right mb-2">
             <i className={card.icon}></i>
           </div>
           <div className="h4 mb-0">{header}</div>
-          <small className="text-muted text-uppercase font-weight-bold">{JSON.stringify(this.state.inhabitants)}</small>
-          <Progress className={progress.style} color={progress.color} value={progress.value} />
+          <small className="text-muted text-uppercase font-weight-bold">{this.state.inhabitants===undefined||this.state.inhabitants.length===0?'未绑定':'绑定'+this.state.inhabitants.length+'人'}</small>
+          <Progress className={progress.style} color={progress.color} value={this.state.inhabitants===undefined?0:this.state.inhabitants.length*10} />
         </CardBody>
       </Card>
     );
@@ -107,7 +110,10 @@ class RoomWidget extends Component {
 RoomWidget.propTypes = propTypes;
 RoomWidget.defaultProps = defaultProps;
 const mapStateToProps = (state) => {
+  console.log('mapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToProps')
+
   let inhabitantList = state.inhabitantList
+  console.log(inhabitantList)
   return { inhabitantList }
 }
 

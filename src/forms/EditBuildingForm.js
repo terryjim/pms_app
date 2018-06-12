@@ -84,8 +84,8 @@ class EditBuildingForm extends Component {
           </Col>
         </FormGroup></Container>
 
-        <Label>{this.state.rooms}</Label>
-        ////////////////////////
+        <Label>房间分配</Label>
+       
         <Row>
           {this.state.rooms.map(room => {
             return (
@@ -114,7 +114,7 @@ class EditBuildingForm extends Component {
         </Row>
 
 
-        ///////////////////////
+       
         <Row className="align-items-center">
           <Col col='9' />
           <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">

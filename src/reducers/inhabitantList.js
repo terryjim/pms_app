@@ -27,11 +27,12 @@ const inhabitantList = (state = [], action) => {
             return value.buildingId === buildingId && value.location.unit === location.unit && value.location.floor === location.floor && value.location.room === location.room
         })
         if (index > -1) {
-            state.splice(index, 1, { buildingId: buildingId, location: { unit: location.unit, floor: location.floor, room: location.room } })
+            state.splice(index, 1, { buildingId: buildingId, location: { unit: location.unit, floor: location.floor, room: location.room },inhabitants:action.data})
         } else {
-            state = state.concat({ buildingId: buildingId, location: { unit: location.unit, floor: location.floor, room: location.room } })
+            state = state.concat({ buildingId: buildingId, location: { unit: location.unit, floor: location.floor, room: location.room },inhabitants:action.data })
         }       
     }
+   // alert(JSON.stringify(state))
     return state;
 }
 export default inhabitantList

@@ -142,7 +142,7 @@ class Building extends Component {
 
         <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼盘信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼栋信息</ModalHeader>
           <ModalBody>
             <EditBuildingForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditBuilding} />
           </ModalBody>
