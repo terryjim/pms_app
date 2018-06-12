@@ -1,14 +1,15 @@
 //判断返回状态码
-export const checkStatus=response=>{
-    alert(response.status)
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  } 
-  const error = new Error(response.statusText);
-  error.response = response;
-  alert(error)
-  throw error
- // return dispatch(showError('网络异常，请稍后再试！<br/>' + error))
+export const checkStatus = response => {
+    if (response.status >= 200 && response.status < 300) {
+        return response;
+    }
+    if (response.status === 401)
+        throw (new Error("对不起，您没有权限访问此资源！"))
+    else {        
+        const error = new Error(response.statusText);
+        error.response = response;       
+        throw error
+    }
 }
 //页面刷新中
 export const loading = () => (
@@ -49,11 +50,12 @@ export const closeConfirm = () => ({
     type: 'CLOSE_CONFIRM'
 })
 //显示成功信息
-export const showSuccess = (msg) =>{   
-    return({
-    type: 'SHOW_SUCCESS',
-    msg,
-})}
+export const showSuccess = (msg) => {
+    return ({
+        type: 'SHOW_SUCCESS',
+        msg,
+    })
+}
 //关闭成功信息
 export const closeSuccess = () => ({
     type: 'CLOSE_SUCCESS'
@@ -76,17 +78,17 @@ export const delList = (ids, module) => dispatch => {
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     //如果配置文件中没有专门的删除api则采用约定api地址
     let delUrl = window.TParams.urls['del_' + module]
-    if (delUrl == undefined||delUrl === '')
+    if (delUrl == undefined || delUrl === '')
         delUrl = window.TParams.defaultUrl + module + '/del'
 
-        ///////////////////////////////////////////////////////////////////
-        //以下部分为测试用，后台API修改后删除些段
-      /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
-        dispatch(delFromGrid(ids, module))    //从列表中删除 
+    ///////////////////////////////////////////////////////////////////
+    //以下部分为测试用，后台API修改后删除些段
+    /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息
+      dispatch(delFromGrid(ids, module))    //从列表中删除 
 return */
-  //以上部分为测试用，后台API修改后删除些段
-            ///////////////////////////////////////////////////////////////////
-    
+    //以上部分为测试用，后台API修改后删除些段
+    ///////////////////////////////////////////////////////////////////
+
     return fetch(delUrl, args).then(response => response.json())
         .then(json => {
             console.log(json)
@@ -96,7 +98,7 @@ return */
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
-                dispatch(showSuccess('成功删除'+json.data+'条记录！'))  //显示删除成功信息
+                dispatch(showSuccess('成功删除' + json.data + '条记录！'))  //显示删除成功信息
                 dispatch(delFromGrid(ids, module))    //从列表中删除 
             }
         }).catch(e => {
@@ -123,7 +125,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')
-        getUrl = window.TParams.defaultUrl + module + '/getByPage'    
+        getUrl = window.TParams.defaultUrl + module + '/getByPage'
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
             console.log(json)
@@ -131,8 +133,11 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
                 return dispatch(showError(json.msg + '<br>' + json.data))
             else
                 return dispatch(getListResult(json.data))
-        }).catch(e => {
-            return dispatch(showError('系统异常，请稍后再试！<br/>' + e))
+        }).catch(e => {           
+            if (e != undefined)
+                return dispatch(showError(e.message))
+            else
+                return dispatch(showError('系统异常，请稍后再试！<br/>'))
         }
         )
 }
@@ -155,22 +160,22 @@ export const saveForm = (values, module) => dispatch => {
     //let body = values
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     let saveUrl = window.TParams.urls['save_' + module]
-    if (saveUrl ==undefined || saveUrl === '')
+    if (saveUrl == undefined || saveUrl === '')
         saveUrl = window.TParams.defaultUrl + module + '/save'
-///////////////////////////////////////////////////
-//以下上部分为测试数据用，API调整好后请删除
-//dispatch(showSuccess('保存成功！'))
-//回传添加或修改后的记录    
-//dispatch(addToGrid(values))
-//回传添加或修改后的记录id,用于页面标识修改痕迹
-//alert(json.data.id)
-/* if(values.id!=null&&values.id!='')
-dispatch(addEditedIds([values.id]))
-else
-dispatch(addEditedIds([Math.floor(Math.random()*(9999999999-10000000+1)+10000000)]))
-return */
-//以上部分为测试数据用，API调整好后请删除
-//////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////
+    //以下上部分为测试数据用，API调整好后请删除
+    //dispatch(showSuccess('保存成功！'))
+    //回传添加或修改后的记录    
+    //dispatch(addToGrid(values))
+    //回传添加或修改后的记录id,用于页面标识修改痕迹
+    //alert(json.data.id)
+    /* if(values.id!=null&&values.id!='')
+    dispatch(addEditedIds([values.id]))
+    else
+    dispatch(addEditedIds([Math.floor(Math.random()*(9999999999-10000000+1)+10000000)]))
+    return */
+    //以上部分为测试数据用，API调整好后请删除
+    //////////////////////////////////////////////////////
 
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {

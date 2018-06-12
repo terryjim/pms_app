@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, Route, Switch,Redirect } from 'react-router-dom';
 import './App.css';
 // Styles
 // CoreUI Icons Set
@@ -23,6 +23,7 @@ import { persistStore, autoRehydrate } from 'redux-persist'
 import reducers from './reducers'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
+
 // import { renderRoutes } from 'react-router-config';
 const history = createBrowserHistory();
 const store = createStore(reducers, undefined, 
@@ -33,12 +34,7 @@ const store = createStore(reducers, undefined,
 //store.dispatch(getOss())
 //setInterval(() => store.dispatch(getOss()), 1000 * 60 * 30)   //定时获取oss信息
 class App extends Component {
- /*  componentWillMount() {    
-    if (window.sessionStorage.accessToken == null||window.sessionStorage.accessToken ==undefined||window.sessionStorage.accessToken ==='') {
-      //alert(history)
-      return <Redirect push to="/login" />
-    }
-  } */
+ 
   render() {
     return (
       <Provider store={store}>
@@ -52,6 +48,7 @@ class App extends Component {
           <Route path="/" name="Home" component={DefaultLayout} />
         </Switch>
       </HashRouter>
+   
       </Provider>
     );
   }

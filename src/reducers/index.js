@@ -6,11 +6,11 @@ import success from './success'
 import confirm from './confirm'
 import cList from './cList'
 import cForm from './cForm'
-/* import assignRooms from './assignRooms' */
+import loading from './loading'
 import inhabitantList from './inhabitantList'
 /* import propertyList from './propertyList' */
 import buildingList from './buildingList'
 import { reducer as formReducer } from 'redux-form'
 // export default combineReducers({user,form:formReducer,sms})
-export default combineReducers({buildingList,inhabitantList,cList,cForm,confirm,user,err,success,form: formReducer })
+export default combineReducers({loading,buildingList,inhabitantList,cList,cForm,confirm,user,err,success,form: formReducer })
 
