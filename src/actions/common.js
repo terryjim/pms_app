@@ -74,6 +74,7 @@ export const delList = (ids, module) => dispatch => {
     //关闭确认窗口
     dispatch(closeConfirm())
     let headers = { 'Content-Type': 'application/json' };
+    headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(ids)
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     //如果配置文件中没有专门的删除api则采用约定api地址
@@ -119,7 +120,7 @@ export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch =
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
-    //headers.Authorization = window.sessionStorage.accessToken
+    headers.Authorization = window.sessionStorage.accessToken
     //orderBy
     let body = JSON.stringify({ whereSql, page, size, orderBy })
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
@@ -154,7 +155,7 @@ export const saveForm = (values, module) => dispatch => {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
-    //headers.Authorization = WebIM.config.tokenLocal
+    headers.Authorization = window.sessionStorage.accessToken
     console.log(values)
     let body = JSON.stringify(values)
     //let body = values

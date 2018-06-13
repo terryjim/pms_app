@@ -82,7 +82,7 @@ export default {
         },
         {
           name: '导入业主',
-          url: '/property/department',
+          url: '/inhabitant/ImportOwners',
           icon: 'icon-location-pin',
         },
         {

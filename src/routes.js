@@ -10,8 +10,8 @@ const Building= Loadable({
   loader: () => import('./views/Building'),
   loading: Loading,
 })
-const Property= Loadable({
-  loader: () => import('./views/Property'),
+const ImportOwners= Loadable({
+  loader: () => import('./forms/ImportOwners'),
   loading: Loading,
 })
 
@@ -188,9 +188,8 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
  
   { path: '/project/building', name: '楼栋管理', component: Building },
-
+  { path: '/inhabitant/ImportOwners', name: '导入业主', component: ImportOwners },
  
-
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   
   { path: '/theme/typography', name: '楼栋管理', component: Building },

@@ -27,7 +27,6 @@ const defaultProps = {
 
 class RoomWidget extends Component {
   constructor(props) {
-    console.log("constructorconstructorconstructorconstructorconstructorconstructorconstructor")
     super(props);
     this.state = {
       //num: 0,//选中的单元号楼层房间绑定用户数    
