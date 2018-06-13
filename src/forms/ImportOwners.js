@@ -38,7 +38,7 @@ class ImportOwners extends Component {
     this.props.dispatch(getBuildingsByDepartment())
   }
   onFormSubmit = (values) => {
-    alert(JSON.stringify(values))
+    alert(JSON.stringify(this.props.buildingList[values.buildingId].id))
     let formData=new FormData()
     formData.append('buildingId',this.props.buildingList[values.buildingId].id)
     formData.append('projectId',this.props.buildingList[values.buildingId].projectId)
