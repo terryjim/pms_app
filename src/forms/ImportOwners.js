@@ -37,16 +37,12 @@ class ImportOwners extends Component {
     super(props)
     this.props.dispatch(getBuildingsByDepartment())
   }
-  onFormSubmit = (values) => {
-    alert(JSON.stringify(this.props.buildingList[values.buildingId].id))
+  onFormSubmit = (values) => {    
     let formData=new FormData()
     formData.append('buildingId',this.props.buildingList[values.buildingId].id)
-    formData.append('projectId',this.props.buildingList[values.buildingId].projectId)
-    alert(JSON.stringify(formData))
-    formData.append('file',values.ownerFile[0])
-    alert(JSON.stringify(formData))
-    this.props.dispatch(uploadOwners(formData))
-   
+    formData.append('projectId',this.props.buildingList[values.buildingId].projectId)  
+    formData.append('file',values.ownerFile[0])   
+    this.props.dispatch(uploadOwners(formData))   
     //this.props.dispatch(saveForm(values, 'project'))
     
   }
@@ -71,7 +67,7 @@ class ImportOwners extends Component {
         <Field 
           name="buildingId"
           component={InputField}
-          type="text"
+          type="hidden"
           label=""      
         />
     

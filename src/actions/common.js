@@ -12,9 +12,10 @@ export const checkStatus = response => {
     }
 }
 //页面刷新中
-export const loading = () => (
+export const loading = (msg) => (
     {
-        type: 'LOADING'
+        type: 'LOADING',
+        msg
     }
 )
 //页面刷新中

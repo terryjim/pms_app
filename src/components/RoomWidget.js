@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, Progress } from 'reactstrap';
+import { ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input, Progress } from 'reactstrap';
+import TopModal from '../components/TopModal'
 import classNames from 'classnames';
 import { mapToCssModules } from 'reactstrap/lib/utils';
 import { connect } from 'react-redux'
 import { getInhabitantsByRoom } from '../actions/inhabitant'
+import EditOwnerForm from '../forms/EditOwnerForm'
 const propTypes = {
   header: PropTypes.string,
   icon: PropTypes.string,
@@ -24,13 +26,13 @@ const defaultProps = {
   /*  children: 'Visitors', */
   invert: false,
 };
-
 class RoomWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
       //num: 0,//选中的单元号楼层房间绑定用户数    
       inhabitants: [],
+      showEditOwner: false,//显示修改表单
     };
     let inhabitantList = this.props.inhabitantList //现有store中居民库
     let { buildingId, unit, floor, room } = this.props
@@ -44,7 +46,7 @@ class RoomWidget extends Component {
         inhabitants: inhabitantList[inhabitantList.findIndex(value => {
           return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
         })].inhabitants
-      })     
+      })
     }
 
     /* 
@@ -71,6 +73,13 @@ class RoomWidget extends Component {
       })
     }
   }
+
+  //切换编辑窗口状态（开、闭）
+  toggleShowEditOwner = () => {
+    this.setState({
+      showEditOwner: !this.state.showEditOwner,
+    });
+  }
   render() {
     const { buildingId, unit, floor, room, className, cssModule, header, icon, color, value, children, invert, inhabitantList, ...attributes } = this.props;
     /* alert(buildingId)
@@ -92,16 +101,25 @@ class RoomWidget extends Component {
     progress.style = classNames('progress-xs mt-3 mb-0', progress.style);
 
     return (
-      <Card color={this.state.inhabitants===undefined||this.state.inhabitants.length===0?'danger':'info'} className={classes} {...attributes}>
-        <CardBody>
-          <div className="h1 text-muted text-right mb-2">
-            <i className={card.icon}></i>
-          </div>
-          <div className="h4 mb-0">{header}</div>
-          <small className="text-muted text-uppercase font-weight-bold">{this.state.inhabitants===undefined||this.state.inhabitants.length===0?'未绑定':'绑定'+this.state.inhabitants.length+'人'}</small>
-          <Progress className={progress.style} color={progress.color} value={this.state.inhabitants===undefined?0:this.state.inhabitants.length*10} />
-        </CardBody>
-      </Card>
+      <div className="animated fadeIn">
+        <Card color={this.state.inhabitants === undefined || this.state.inhabitants.length === 0 ? 'danger' : 'info'} className={classes} {...attributes}>
+          <CardBody>
+            <div className="h1 text-muted text-right mb-2">
+              <i className={card.icon} onClick={() => alert(1)}></i>
+            </div>
+            <div className="h4 mb-0">{header}</div>
+            <small className="text-muted text-uppercase font-weight-bold">{this.state.inhabitants === undefined || this.state.inhabitants.length === 0 ? '未绑定' : '绑定' + this.state.inhabitants.length + '人'}</small>
+            <Progress className={progress.style} color={progress.color} value={this.state.inhabitants === undefined ? 0 : this.state.inhabitants.length * 10} />
+          </CardBody>
+        </Card>
+        <TopModal style={{ "max-width": "350px" }} isOpen={this.state.showEditOwner} toggle={() => this.toggleShowEditOwner()}
+          className={'modal-primary ' + this.props.className}>
+          <ModalHeader toggle={() => this.toggleShowEditOwner()}>户主信息</ModalHeader>
+          <ModalBody>
+            <EditOwnerForm onSubmit={this.submit} closeForm={this.toggleShowEditOwner} />
+          </ModalBody>
+        </TopModal>
+      </div>
     );
   }
 }

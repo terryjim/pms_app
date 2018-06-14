@@ -12,17 +12,21 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 
 const validate = values => {
   const errors = {}
-  if (!values.companyName) {
-    errors.name = '物业公司名称不能为空'
+  if (!values.name) {
+    errors.name = '业主名称不能为空'
+  }
+  if (!values.phone) {
+    errors.phone = '手机号码不能为空'
   }
   return errors
 }
 
-let EditPropertyForm = props => {
+let EditOwnerForm = props => {
   const { readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
 
 
   return (
+    <div className="animated fadeIn">    
     <form onSubmit={handleSubmit} >
       <Field name="id" component="input" type="hidden" label="id" />
       <Field readOnly={readOnly}
@@ -88,6 +92,8 @@ let EditPropertyForm = props => {
       </Row>
 
     </form>
+
+    </div>
   );
 }
 
@@ -96,10 +102,10 @@ let EditPropertyForm = props => {
 
 
 // Decorate the form component
-EditPropertyForm = reduxForm({
+EditOwnerForm = reduxForm({
   form: 'property', // a unique name for this form
   validate,                // redux-form同步验证 
-})(EditPropertyForm);
+})(EditOwnerForm);
 const mapStateToProps = (state) => {
   console.log(state.cForm.data)
   let initEnabled = '0'
@@ -110,10 +116,10 @@ const mapStateToProps = (state) => {
   return { initialValues: { ...state.cForm.data, enabled: initEnabled } }// 单选框选中状态必须为字符串，所以要将数字加引号
 }
 
-EditPropertyForm = connect(
+EditOwnerForm = connect(
   mapStateToProps
   // { load: loadAccount } // bind account loading action creator
-)(EditPropertyForm)
+)(EditOwnerForm)
 
-export default EditPropertyForm;
+export default EditOwnerForm;
 

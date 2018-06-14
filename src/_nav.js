@@ -30,7 +30,7 @@ export default {
     },  
         {
           name: '楼栋列表',
-          url: '/project/building',
+          url: '/info/buildings',
           icon: 'icon-layers',
         }   
    , 
@@ -76,13 +76,13 @@ export default {
         //class: '',             // optional class names space delimited list for title item ex: "text-center"
       },
         {
-          name: '住宅列表',
-          url: '/property/setting',
+          name: '业主列表',
+          url: '/inhabitant/owners',
           icon: 'icon-settings',
         },
         {
           name: '导入业主',
-          url: '/inhabitant/ImportOwners',
+          url: '/inhabitant/importOwners',
           icon: 'icon-location-pin',
         },
         {

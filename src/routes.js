@@ -6,7 +6,7 @@ import DefaultLayout from './containers/DefaultLayout';
 function Loading() {
   return <div>Loading...</div>;
 }
-const Building= Loadable({
+const Buildings= Loadable({
   loader: () => import('./views/Building'),
   loading: Loading,
 })
@@ -14,7 +14,10 @@ const ImportOwners= Loadable({
   loader: () => import('./forms/ImportOwners'),
   loading: Loading,
 })
-
+const Owners= Loadable({
+  loader: () => import('./views/Owner'),
+  loading: Loading,
+})
 
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
@@ -187,12 +190,12 @@ const routes = [
   { path: '/', exact: true, name: 'Home', component: DefaultLayout },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
  
-  { path: '/project/building', name: '楼栋管理', component: Building },
-  { path: '/inhabitant/ImportOwners', name: '导入业主', component: ImportOwners },
- 
+  { path: '/info/buildings', name: '楼栋管理', component: Buildings },
+  { path: '/inhabitant/importOwners', name: '导入业主', component: ImportOwners },
+  { path: '/inhabitant/owners', name: '业主列表', component: Owners },
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   
-  { path: '/theme/typography', name: '楼栋管理', component: Building },
+  { path: '/theme/typography', name: '楼栋管理', component: Buildings },
   { path: '/base', exact: true, name: 'Base', component: Cards },
   { path: '/base/cards', name: 'Cards', component: Cards },
   { path: '/base/forms', name: 'Forms', component: Forms },
