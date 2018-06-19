@@ -11,6 +11,7 @@ const TParams = {
         getInhabitantsByRoom: defaultUrl + 'inhabitant/getByRoom',//根据房号获取居客信息
         getBuildingsByDepartment: defaultUrl + 'building/getListByDepartment',//根据当前用户获取楼栋下拉框列表
         uploadOwners: defaultUrl + 'owner/batchImport',
+        bindRoom:defaultUrl + 'owner/bindRoom',
         ///////////////////////////////////////以下无用，后续删除！！！
         //////////////////////////////////////
         /* get_project_list: defaultUrl + 'project/getByPage',

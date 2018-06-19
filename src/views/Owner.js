@@ -97,7 +97,7 @@ class Owner extends Component {
           className="-striped -highlight"          
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           onFetchData={(state, instance) => {
-            let whereSql = ''
+            let whereSql = ' and category=1'
             state.filtered.forEach(
               v => whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
             )          

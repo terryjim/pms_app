@@ -1,5 +1,5 @@
 import { loaded, loading, showError } from "./common";
-//获取楼盘列表
+//根据房号获取绑定的住户列表
 export const getInhabitantsByRoom = (values) =>dispatch=> {   
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
@@ -21,7 +21,7 @@ export const getInhabitantsByRoom = (values) =>dispatch=> {
                 dispatch(fillInhabitants(values,json.data))
             }
         }).catch(e => {
-            return dispatch(showError('网络异常，获取楼盘列表出错，请稍后再试！<br/>' + e))
+            return dispatch(showError('网络异常，请稍后再试！<br/>' + e))
         })
 }
 //新增或修改后的记录更新列表

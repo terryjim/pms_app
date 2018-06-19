@@ -90,7 +90,7 @@ class EditBuildingForm extends Component {
           {this.state.rooms.map(room => {
             return (
               <Col sm="6" md="2">
-                <RoomWidget key={room} icon="icon-user-follow" color="success" value="55" buildingId={initialValues.id} unit={this.state.selectedUnitName} floor={this.state.selectedFloorName} room={room} invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room} />
+                <RoomWidget key={room} icon="icon-user-follow" color="success" value="55" buildingId={initialValues.id} projectId={initialValues.projectId} unit={this.state.selectedUnitName} floor={this.state.selectedFloorName} room={room} invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room} />
               </Col>)
           })}
           {/* <Col sm="6" md="2">

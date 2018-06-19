@@ -52,7 +52,7 @@ export default {
     },
       {
         name: '企业列表',
-        url: '/property/setting',
+        url: '/owner/companies',
         icon: 'icon-settings',
       },
       {

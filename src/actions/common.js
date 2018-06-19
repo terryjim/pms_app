@@ -151,7 +151,7 @@ export const getListResult = (json) => (
     }
 )
 
-//保存管理员
+//保存表单
 export const saveForm = (values, module) => dispatch => {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/

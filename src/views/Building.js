@@ -46,12 +46,12 @@ class Building extends Component {
       showDanger: !this.state.showDanger,
     });
   }
-  submit = (values) => {
+/*   submit = (values) => {
     console.log(values)
 
     this.props.dispatch(saveForm(values, 'building'))
     this.setState({ showEditBuilding: false })
-  }
+  } */
   columns = [{
     accessor: 'id',
     Header: 'id',

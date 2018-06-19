@@ -18,7 +18,10 @@ const Owners= Loadable({
   loader: () => import('./views/Owner'),
   loading: Loading,
 })
-
+const Companies= Loadable({
+  loader: () => import('./views/Company'),
+  loading: Loading,
+})
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
   loading: Loading,
@@ -193,6 +196,9 @@ const routes = [
   { path: '/info/buildings', name: '楼栋管理', component: Buildings },
   { path: '/inhabitant/importOwners', name: '导入业主', component: ImportOwners },
   { path: '/inhabitant/owners', name: '业主列表', component: Owners },
+  { path: '/owner/companies', name: '企业列表', component: Companies },
+
+
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   
   { path: '/theme/typography', name: '楼栋管理', component: Buildings },

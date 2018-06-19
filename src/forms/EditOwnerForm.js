@@ -4,7 +4,7 @@ import { ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, Mod
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 import { InputField } from '../components/field'
-import Cities from '../components/Cities'
+
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
@@ -22,76 +22,53 @@ const validate = values => {
 }
 
 let EditOwnerForm = props => {
-  const { readOnly = false, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
-
-
+  const { name, phone, header,dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
+  initialValues.name = name
+  initialValues.phone = phone
   return (
-    <div className="animated fadeIn">    
-    <form onSubmit={handleSubmit} >
-      <Field name="id" component="input" type="hidden" label="id" />
-      <Field readOnly={readOnly}
-        name="companyName"
-        component={InputField}
-        type="text"
-        label="物业名称"
-      />
-      <FormGroup row>
-        <Col md="3">
-          <Label>&nbsp;&nbsp;&nbsp;&nbsp;状态</Label>
-        </Col>
-        <Col md="9">
-          <FormGroup check inline>
-            <Field className="form-check-input"
-              name="enabled"
-              component="input"
-              type="radio"
-              value="0"
-            />{' '}
-            启用{'  '}
-          </FormGroup>
-          <FormGroup check inline>
-            <Field className="form-check-input"
-              name="enabled"
-              component="input"
-              type="radio"
-              value="1"
-            />{' '}
-            禁用{'  '}
-          </FormGroup>
-        </Col>
-      </FormGroup>
-     {/* 
+    <div className="animated fadeIn">
+      <form onSubmit={handleSubmit} >
+        <Field name="id" component="input" type="hidden" label="id" />
+        <Label>{header}</Label>
+        <Field
+          name="name"
+          component={InputField}
+          type="text"
+          label="业主名称"
+        />
+        <Field
+          name="phone"
+          component={InputField}
+          type="text"
+          label="手机号码"
+          value={phone}
+        />
+        {/* 
       <Field readOnly={readOnly}
         name="enabled"
         component={InputField}
         type="text"
         label="楼栋类型"
       />*/}
-      <Field readOnly={readOnly}
-        name="remark"
-        component={InputField}
-        type="textarea"
-        rows='5'
-        label="备注"
-      />
-
-      {error && <strong>{error}</strong>}
 
 
-      <Row className="align-items-center">
-        <Col col='9' />
-        <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="primary" hidden={readOnly} type="submit" disabled={pristine || submitting}>提交</Button>
-        </Col>
-        {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+        {error && <strong>{error}</strong>}
+
+
+        <Row className="align-items-center">
+          <Col col='9' />
+          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+            <Button block color="primary" type="submit" disabled={pristine || submitting}>提交</Button>
+          </Col>
+          {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
               </Col>     */}
-        <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-          <Button block color="danger" onClick={closeForm}>关闭</Button>
-        </Col>
-      </Row>
+          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
+            <Button block color="danger" onClick={closeForm}>关闭</Button>
+          </Col>
+        </Row>
 
-    </form>
+      </form>
 
     </div>
   );
@@ -103,17 +80,12 @@ let EditOwnerForm = props => {
 
 // Decorate the form component
 EditOwnerForm = reduxForm({
-  form: 'property', // a unique name for this form
+  form: 'owner', // a unique name for this form
   validate,                // redux-form同步验证 
 })(EditOwnerForm);
 const mapStateToProps = (state) => {
-  console.log(state.cForm.data)
-  let initEnabled = '0'
-  if (state.cForm.data != undefined && state.cForm.data != null)
-    initEnabled = '' + state.cForm.data.enabled
-  if (initEnabled == undefined || initEnabled == null)
-    initEnabled = '0'
-  return { initialValues: { ...state.cForm.data, enabled: initEnabled } }// 单选框选中状态必须为字符串，所以要将数字加引号
+
+  return { initialValues: {} }// 单选框选中状态必须为字符串，所以要将数字加引号
 }
 
 EditOwnerForm = connect(
@@ -122,4 +94,6 @@ EditOwnerForm = connect(
 )(EditOwnerForm)
 
 export default EditOwnerForm;
+
+
 
