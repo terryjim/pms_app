@@ -35,6 +35,7 @@ class ImportOwners extends Component {
   }
   constructor(props) {
     super(props)
+    if(props.buildingList===undefined)
     this.props.dispatch(getBuildingsByDepartment())
   }
   onFormSubmit = (values) => {    

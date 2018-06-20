@@ -4,11 +4,11 @@ import {
   DropdownToggle, Form, FormGroup, FormText, FormFeedback, Input, InputGroup, InputGroupAddon, InputGroupText,
   Label, Row,Container
 } from 'reactstrap';
-export const InputField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
+export const InputField = ({ readOnly, input, label, placeholder,type, meta: { touched, error } }) => (
   <Col xs="12">
     <FormGroup>
       <Label hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
-      <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
+      <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={placeholder===undefined?label:placeholder} {...input} readOnly={readOnly} />
       {touched && error && <FormFeedback>{error}</FormFeedback>}
     </FormGroup>
     {console.log(input)}

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditBuildingForm from '../forms/EditBuildingForm'
+import EditCompanyForm from '../forms/EditCompanyForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
@@ -104,7 +104,7 @@ class Company extends Component {
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditProject: true, edit: true })
+            this.setState({ showEditCompany: true, edit: true })
           }
         }>
       </a>
@@ -226,11 +226,11 @@ class Company extends Component {
           {...checkboxProps}
         />
        
-        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
+        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditCompany} toggle={() => this.toggleShowEditCompany()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼栋信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditCompany()}>企业信息</ModalHeader>
           <ModalBody>
-            <EditBuildingForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditBuilding} />
+            <EditCompanyForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditCompany} />
           </ModalBody>
         </TopModal>      
       </div>
@@ -242,7 +242,7 @@ const mapStateToProps = (state) => {
   let vOwners = state.cList
   console.log(vOwners)
   let editedIds = state.editedIds
-  let confirmDel = state.confirm.module === 'project' && state.confirm.operate === 'del' ? state.confirm.confirm : false
+  let confirmDel = state.confirm.module === 'company' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   return { vOwners, editedIds, confirmDel }
 }
 
