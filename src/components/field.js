@@ -10,8 +10,7 @@ export const InputField = ({ readOnly, input, label, placeholder,type, meta: { t
       <Label hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
       <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={placeholder===undefined?label:placeholder} {...input} readOnly={readOnly} />
       {touched && error && <FormFeedback>{error}</FormFeedback>}
-    </FormGroup>
-    {console.log(input)}
+    </FormGroup>   
   </Col>
   /*  <Label htmlFor="inputIsInvalid">Input is invalid</Label>
    <Input type="text" invalid id="inputIsInvalid" />

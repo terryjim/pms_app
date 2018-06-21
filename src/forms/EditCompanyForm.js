@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Field, reduxForm, change, FieldArray } from 'redux-form';
+import { Field, reduxForm, change, FieldArray,formValueSelector } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField } from '../components/field'
+
+import { InputField, InlineField } from '../components/field'
 import { getBuildingsByDepartment } from '../actions/building'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
@@ -13,15 +14,15 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 const validate = values => {
   const errors = {}
   if (!values.name) {
-    errors.name = '业主名称不能为空'
+    errors.name = '企业名称不能为空'
   }
-  if (!values.domain) {
+  if (!values.owner&&!values.domain) {
     errors.domain = '企业空间名称不能为空'
   }
   if (!values.location) {
     errors.location = '房间号不能为空'
   }
-  if (!values.manager) {
+  if (!values.owner&&!values.manager) {
     errors.manager = '管理员不能为空'
   }
   if (!values.phone) {
@@ -34,17 +35,14 @@ const validate = values => {
 }
 
 let EditCompanyForm = props => {
-  const { name, phone, header, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, buildingList } = props;
-  initialValues.name = name
-  initialValues.phone = phone
-  console.log('-------------------------------------------------------------')
-  console.log(buildingList)
+  const { header, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, buildingList } = props;
+
   //let 
-  if (buildingList === undefined||buildingList.length===0){
+  if (buildingList === undefined || buildingList.length === 0) {
     console.log('-------------------------------------------------------------')
     props.dispatch(getBuildingsByDepartment())
   }
-   
+
 
   return (
     <div className="animated fadeIn">
@@ -53,16 +51,20 @@ let EditCompanyForm = props => {
         <Label>{header}</Label>
         <Field
           name="name"
-          component={InputField}
+          component={InlineField}
           type="text"
           label="企业名称"
+          readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
+       {/*  <Button color="primary" size="sm" onClick={() => { dispatch(fillFormByCompanyName(companyName)); this.setState({ showEditCompany: true, edit: true }) }}>查询</Button>
+       */} 
         <Field
           name="domain"
           component={InputField}
-          placeholder="六位及以上英文（不区分大小写）及数字组成"
-          type="text"
+          placeholder="六位及以上英文（不区分大小写）和数字组成"
+          type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
           label="企业空间名称"
+          readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
         <Container><FormGroup row>
           <Label sm={3} for="buildingId">楼栋号</Label>
@@ -71,7 +73,7 @@ let EditCompanyForm = props => {
               <option value="">请选择楼栋</option>
               {buildingList != undefined ?
                 buildingList.map((build, index) => (
-                  <option value={index} key={index}>
+                  <option value={build.id} key={index}>
                     {build.name}
                   </option>
                 )) : ''}
@@ -83,26 +85,35 @@ let EditCompanyForm = props => {
           component={InputField}
           type="hidden"
           label=""
+          
         />
         <Field
           name="location"
           component={InputField}
           type="text"
           placeholder="按单元号-楼层号-房号格式输入，多间房以逗号分隔，如1-12-1,1-12-2,1-12-3"
-          label="房间号"
+          label="房间号"          
         />
-       
+
         <Field
           name="manager"
           component={InputField}
-          type="text"
+          type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
           label="管理员"
+          
         />
         <Field
           name="phone"
           component={InputField}
           type="text"
           label="手机号码"
+          readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
+        />
+          <Field
+          name="owner"
+          component={InputField}
+          type="text"
+          label="企业id"
         />
         {/* 
       <Field readOnly={readOnly}
@@ -144,9 +155,15 @@ EditCompanyForm = reduxForm({
   form: 'company', // a unique name for this form
   validate,                // redux-form同步验证 
 })(EditCompanyForm);
+//const selector = formValueSelector('company')
 const mapStateToProps = (state, ownProps) => {
   let buildingList = state.buildingList
-  return { initialValues: {}, buildingList }
+  console.log(JSON.stringify(state.cForm.data))
+  //const companyName=selector(state,'name')
+  if (state.cForm.data != undefined && state.cForm.data != null)
+    return { initialValues: { ...state.cForm.data }, buildingList }
+  else
+    return { initialValues: {}, buildingList }
 }
 
 EditCompanyForm = connect(

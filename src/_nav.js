@@ -55,11 +55,11 @@ export default {
         url: '/owner/companies',
         icon: 'icon-settings',
       },
-      {
+     /*  {
         name: '企业入驻',
         url: '/property/department',
         icon: 'icon-location-pin',
-      },
+      }, */
       {
         title: true,
         name: '住宅管理',

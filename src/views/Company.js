@@ -27,6 +27,13 @@ class Company extends Component {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
+  componentWillReceiveProps(nextProps) {
+    //确认删除记录操作    
+    if (nextProps.confirmDel) {
+      alert(this.state.selection)
+      this.props.dispatch(delList(this.state.selection, 'owner'))
+    }
+  }
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -90,10 +97,10 @@ class Company extends Component {
   }
   submit = (values) => {
     console.log(values)
-    this.props.dispatch(saveForm(values, 'owner'))
+    this.props.dispatch(saveForm(values, 'company'))
     this.setState({ showEditCompany: false })
   }
-  columns = [ {
+  columns = [{
     Header: '',
     sortable: false,
     width: 60,
@@ -104,6 +111,7 @@ class Company extends Component {
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
+            this.setState({ selection: [c.row.id] })
             this.setState({ showEditCompany: true, edit: true })
           }
         }>
@@ -113,13 +121,13 @@ class Company extends Component {
         onClick={
           e => {
             e.stopPropagation()
-             this.setState({selection:[c.row.id]})
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'project', 'del'))
+            this.setState({ selection: [c.row.id] })
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'owner', 'del'))
           }
         }>
       </a>
     </div>)
-  },{
+  }, {
     accessor: 'id',
     Header: 'id',
     // show: false,
@@ -138,6 +146,10 @@ class Company extends Component {
   }, {
     accessor: 'buildingName',
     Header: '所在楼栋',
+
+  }, {
+    accessor: 'owner',
+    Header: '企业ＩＤ',
 
   }, {
     id: 'location',
@@ -170,7 +182,7 @@ class Company extends Component {
     let vOwners = this.props.vOwners
     return (
       <div className="animated fadeIn">
-         <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCompany: true, edit: true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCompany: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
@@ -225,14 +237,14 @@ class Company extends Component {
           }
           {...checkboxProps}
         />
-       
-        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditCompany} toggle={() => this.toggleShowEditCompany()}
+
+        <TopModal style={{ "max-width": "850px" }} isOpen={this.state.showEditCompany} toggle={() => this.toggleShowEditCompany()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditCompany()}>企业信息</ModalHeader>
           <ModalBody>
             <EditCompanyForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditCompany} />
           </ModalBody>
-        </TopModal>      
+        </TopModal>
       </div>
     )
   }

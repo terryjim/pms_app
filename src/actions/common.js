@@ -178,9 +178,10 @@ export const saveForm = (values, module) => dispatch => {
     return */
     //以上部分为测试数据用，API调整好后请删除
     //////////////////////////////////////////////////////
-
+    dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {
+            dispatch(loaded())
             console.log(json)
             console.log(json.data)
             if (json.code !== 0) {
@@ -196,6 +197,7 @@ export const saveForm = (values, module) => dispatch => {
                 dispatch(addEditedIds([json.data.id]))
             }
         }).catch(e => {
+            dispatch(loaded())
             return dispatch(showError('网络异常，请稍后再试！<br/>' + e))
         }
         )
