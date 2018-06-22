@@ -163,21 +163,7 @@ export const saveForm = (values, module) => dispatch => {
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     let saveUrl = window.TParams.urls['save_' + module]
     if (saveUrl == undefined || saveUrl === '')
-        saveUrl = window.TParams.defaultUrl + module + '/save'
-    ///////////////////////////////////////////////////
-    //以下上部分为测试数据用，API调整好后请删除
-    //dispatch(showSuccess('保存成功！'))
-    //回传添加或修改后的记录    
-    //dispatch(addToGrid(values))
-    //回传添加或修改后的记录id,用于页面标识修改痕迹
-    //alert(json.data.id)
-    /* if(values.id!=null&&values.id!='')
-    dispatch(addEditedIds([values.id]))
-    else
-    dispatch(addEditedIds([Math.floor(Math.random()*(9999999999-10000000+1)+10000000)]))
-    return */
-    //以上部分为测试数据用，API调整好后请删除
-    //////////////////////////////////////////////////////
+        saveUrl = window.TParams.defaultUrl + module + '/save'    
     dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {

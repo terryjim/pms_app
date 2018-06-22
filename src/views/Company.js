@@ -29,10 +29,11 @@ class Company extends Component {
   }
   componentWillReceiveProps(nextProps) {
     //确认删除记录操作    
-    if (nextProps.confirmDel) {
-      alert(this.state.selection)
+    if (nextProps.confirmDel) {     
       this.props.dispatch(delList(this.state.selection, 'owner'))
     }
+    if (nextProps.closeModal)    //保存成功后关闭表单窗口
+      this.setState({ showEditCompany: false })
   }
   toggleSelection = (key, shift, row) => {
     /* 
@@ -98,7 +99,7 @@ class Company extends Component {
   submit = (values) => {
     console.log(values)
     this.props.dispatch(saveForm(values, 'company'))
-    this.setState({ showEditCompany: false })
+    //this.setState({ showEditCompany: false })
   }
   columns = [{
     Header: '',
@@ -122,7 +123,7 @@ class Company extends Component {
           e => {
             e.stopPropagation()
             this.setState({ selection: [c.row.id] })
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'owner', 'del'))
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'company', 'del'))
           }
         }>
       </a>
@@ -187,7 +188,7 @@ class Company extends Component {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
           else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'owner', 'del'));
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'company', 'del'));
         }}>删除</Button>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={vOwners.content}
           pages={vOwners.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
@@ -252,10 +253,11 @@ class Company extends Component {
 //获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let vOwners = state.cList
+  let success = state.success
   console.log(vOwners)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'company' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { vOwners, editedIds, confirmDel }
+  return { closeModal: success.show, vOwners, editedIds, confirmDel }
 }
 
 

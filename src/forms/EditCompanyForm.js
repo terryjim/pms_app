@@ -112,7 +112,7 @@ let EditCompanyForm = props => {
           <Field
           name="owner"
           component={InputField}
-          type="text"
+          type="hidden"
           label="企业id"
         />
         {/* 
