@@ -14,9 +14,9 @@ export default {
 
     {
       title: true,
-      name: '楼栋信息管理',
+      name: '楼栋户主信息管理',
       wrapper: {            // optional wrapper object
-        element: '楼栋信息管理',        // required valid HTML5 element tag
+        element: 'div',        // required valid HTML5 element tag
         attributes: {style: {fontSize: 15,color:"#8bc34a"}}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       //url: '/base',
@@ -29,7 +29,7 @@ export default {
       //class: 'h3' 
     },  
         {
-          name: '楼栋列表',
+          name: '户主分配管理',
           url: '/info/buildings',
           icon: 'icon-layers',
         }   
@@ -39,7 +39,7 @@ export default {
       title: true,
       name: '企业管理',
       wrapper: {            // optional wrapper object
-        element: '企业管理',        // required valid HTML5 element tag
+        element: 'div',        // required valid HTML5 element tag
         attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
       //url:'/theme',
@@ -64,7 +64,7 @@ export default {
         title: true,
         name: '住宅管理',
         wrapper: {            // optional wrapper object
-          element: '住宅管理',        // required valid HTML5 element tag
+          element: 'div',        // required valid HTML5 element tag
           attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
         },
         //url:'/theme',
@@ -84,7 +84,7 @@ export default {
           name: '导入业主',
           url: '/inhabitant/importOwners',
           icon: 'icon-location-pin',
-        },
+        }/* ,
         {
           title: true,
           name: '门禁管理',
@@ -92,14 +92,7 @@ export default {
             element: '门禁管理',        // required valid HTML5 element tag
             attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
           },
-          //url:'/theme',
-          /* wrapper: {            // optional wrapper object
-            element: '',        // required valid HTML5 element tag
-            attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-          }, */
-         // icon: 'icon-energy',
-          //class: '',             // optional class names space delimited list for title item ex: "text-center"
-        },
+           },
           {
             name: '门禁列表',
             url: '/property/setting',
@@ -112,24 +105,17 @@ export default {
               element: '停车管理',        // required valid HTML5 element tag
               attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
             },
-            //url:'/theme',
-            /* wrapper: {            // optional wrapper object
-              element: '',        // required valid HTML5 element tag
-              attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-            }, */
-           // icon: 'icon-energy',
-            //class: '',             // optional class names space delimited list for title item ex: "text-center"
-          },
+               },
             {
               name: '停车道闸列表',
               url: '/property/setting',
               icon: 'icon-settings',
-            },
+            } */,
             {
               title: true,
               name: '公告管理',
               wrapper: {            // optional wrapper object
-                element: '公告管理',        // required valid HTML5 element tag
+                element: 'div',        // required valid HTML5 element tag
                 attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
               },
               //url:'/theme',
@@ -149,7 +135,7 @@ export default {
                 title: true,
                 name: '物业管家',
                 wrapper: {            // optional wrapper object
-                  element: '物业管家',        // required valid HTML5 element tag
+                  element: 'div',        // required valid HTML5 element tag
                   attributes: {style: {fontSize: 15,color:"#8bc34a" }}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
                 },
                 //url:'/theme',
@@ -166,7 +152,7 @@ export default {
                   icon: 'icon-settings',
                 },
                 {
-                  name: '客服定理',
+                  name: '客服管理',
                   url: '/property/department',
                   icon: 'icon-location-pin',
                 },
@@ -415,8 +401,8 @@ export default {
           icon: 'icon-star',
         },
       ],
-    },
-    {
+    }, 
+     {
       name: 'Download CoreUI',
       url: 'http://coreui.io/react/',
       icon: 'icon-cloud-download',

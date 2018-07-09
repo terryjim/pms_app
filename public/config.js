@@ -1,5 +1,5 @@
-//const defaultUrl = "http://localhost:81/"
-const defaultUrl = "http://192.168.10.153:81/"
+const defaultUrl = "http://localhost:81/"
+//const defaultUrl = "http://192.168.10.153:81/"
 const TParams = {
     defaultUrl,
     defaultPageSize: 20,

@@ -11,18 +11,18 @@ import { InputField, SelectField, InlineField, } from '../components/field'
 const UploadFile = ({ input: {value: omitValue, ...inputProps }, meta: omitMeta, ...props }) => (
   <input type='file' {...inputProps} {...props} />
 );
-/* const  validate = values => {
+const  validate = values => {
   const errors = {}
   console.log('---------------------------------')
   console.log(values)
   if (!values.buildingId) {   
     errors.buildingId = '楼栋不能为空'
   }
-  if (!values.file) {
-    errors.file = '请上传文件'
+  if (!values.ownerFile) {
+    errors.ownerFile = '请上传文件'
   }
   return errors
-} */
+}
 
 class ImportOwners extends Component {
   componentWillMount() {
@@ -35,13 +35,13 @@ class ImportOwners extends Component {
   }
   constructor(props) {
     super(props)
-    if(props.buildingList===undefined)
+    if(props.buildingList===undefined||props.buildingList.length===0)
     this.props.dispatch(getBuildingsByDepartment())
   }
   onFormSubmit = (values) => {    
-    let formData=new FormData()
+    let formData=new FormData()   
     formData.append('buildingId',this.props.buildingList[values.buildingId].id)
-    formData.append('projectId',this.props.buildingList[values.buildingId].projectId)  
+    formData.append('projectId',''+this.props.buildingList[values.buildingId].projectId)  
     formData.append('file',values.ownerFile[0])   
     this.props.dispatch(uploadOwners(formData))   
     //this.props.dispatch(saveForm(values, 'project'))
@@ -75,8 +75,13 @@ class ImportOwners extends Component {
     <Field 
           name="ownerFile"
           component={UploadFile}
-          accept=".xlsx"
-         
+          accept=".xlsx"         
+        />
+         <Field 
+          name="ownerFile"
+          component={InputField}
+          type="hidden"
+          label=""      
         />
     {/* 
          <FormGroup row>
@@ -89,12 +94,16 @@ class ImportOwners extends Component {
                   </FormGroup> */}
                   {error && <strong>{error}</strong>}
         <Row className="align-items-center">
-          <Col col='11' />
-          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-            <Button block color="primary"  type="submit" disabled={submitting}>提交</Button>
+          <Col col='10'>&nbsp;</Col>
+          <Col col="2" >
+            <Button block color="primary"  type="submit" disabled={submitting} >提交</Button>
           </Col>
         </Row>
+        <hr/>
+        <p><i className="h5"> 注意：导入住户数据不会删除原有记录，但会覆盖原有记录，请谨慎操作！</i></p>
+        <p><a href="/template/owner.xlsx">下载模板文件</a></p>
       </form>
+
     );
   }
 }
@@ -105,11 +114,12 @@ class ImportOwners extends Component {
 // Decorate the form component
 ImportOwners = reduxForm({
   form: 'importOwners', // a unique name for this form
-  //validate,                // redux-form同步验证 
+  validate,                // redux-form同步验证 
 })(ImportOwners);
 /* const selector = formValueSelector('building') */
 const mapStateToProps = (state) => {
   let buildingList = state.buildingList
+ 
   return { buildingList }
 }
 

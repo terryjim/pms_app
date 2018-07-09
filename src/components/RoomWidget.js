@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Container,ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input, Progress } from 'reactstrap';
+import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input, Progress } from 'reactstrap';
 import TopModal from '../components/TopModal'
 import classNames from 'classnames';
 import { mapToCssModules } from 'reactstrap/lib/utils';
@@ -21,7 +21,7 @@ const propTypes = {
 
 const defaultProps = {
   header: '87.500',
-  icon: 'icon-people',
+  icon: 'fa fa-cogs',
   color: 'info',
   value: '25',
   /*  children: 'Visitors', */
@@ -31,65 +31,18 @@ class RoomWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      //num: 0,//选中的单元号楼层房间绑定用户数    
-      inhabitants: [],
       showEditOwner: false,//显示修改表单
-    };
-    let inhabitantList = this.props.inhabitantList //现有store中居民库
-    let { buildingId, unit, floor, room } = this.props
-    //如果现有store中没有当前房号则从数据库加载数据
-    if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
-      return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
-    }) < 0) {
-      this.props.dispatch(getInhabitantsByRoom({ buildingId, unit, floor, room }))
-    } else {
-      let inhabitants = inhabitantList[inhabitantList.findIndex(value => {
-        return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
-      })].inhabitants
-      let owner = {}
-      if (inhabitants != undefined) {
-        let ownerIndex = inhabitants.findIndex(value => value.category === 1)
-        if (ownerIndex >= 0) {
-          owner.userName = inhabitants[ownerIndex].name
-          owner.phone = inhabitants[ownerIndex].phone
-          owner.id = inhabitants[ownerIndex].id
-        }
-      }
-      this.setState({ inhabitants, owner })
     }
-
-    /* 
-    
-    
-        inhabitantList[inhabitantList.findIndex(value => {
-          return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
-        })].inhabitants */
-
-
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillMount() {
     let inhabitantList = this.props.inhabitantList
-    let { buildingId, unit, floor, room } = nextProps
+    let { buildingId, unit, floor, room } = this.props
     if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {
       this.props.dispatch(getInhabitantsByRoom({ buildingId, unit, floor, room }))
-    } else {
-      let inhabitants = inhabitantList[inhabitantList.findIndex(value => {
-        return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
-      })].inhabitants
-      let owner = {}
-      if (inhabitants != undefined) {
-        let ownerIndex = inhabitants.findIndex(value => value.category === 1)
-        if (ownerIndex >= 0) {
-          owner.userName = inhabitants[ownerIndex].name
-          owner.phone = inhabitants[ownerIndex].phone
-        }
-      }
-      this.setState({ inhabitants, owner })
     }
   }
-
   //切换编辑窗口状态（开、闭）
   toggleShowEditOwner = () => {
     this.setState({
@@ -100,21 +53,16 @@ class RoomWidget extends Component {
   submit = (values) => {
     let ret = { ...values }
     ret.buildingId = this.props.buildingId
-    ret.projectId=this.props.projectId
+    ret.projectId = this.props.projectId
     ret.unit = this.props.unit
     ret.floor = this.props.floor
     ret.room = this.props.room
-    ret.id = this.state.id  
+    ret.id = this.state.id
     this.props.dispatch(bindRoom(ret))
     this.setState({ showEditOwner: false })
   }
   render() {
-    const { buildingId, unit, floor, room, className, cssModule, header, icon, color, value, children, invert, inhabitantList, ...attributes } = this.props;
-    /* alert(buildingId)
-    alert(unit)
-    alert(floor)
-    alert(room) */
-    // demo purposes only
+    const { inhabitants, owner, buildingId, unit, floor, room, className, cssModule, header, icon, color, value, children, invert, inhabitantList, ...attributes } = this.props;
     const progress = { style: '', color: color, value: value };
     const card = { style: '', bgColor: '', icon: icon };
 
@@ -130,27 +78,31 @@ class RoomWidget extends Component {
 
     return (
       <div className="animated fadeIn">
-        <Card  color={this.state.inhabitants === undefined || this.state.inhabitants.length === 0 ? 'danger' : 'info'} className={classes} {...attributes}>
+        <Card onClick={() => this.setState({ showEditOwner: true })} color={inhabitants === undefined || inhabitants.length === 0 ? 'danger' : 'info'} className={classes} {...attributes}>
           <CardBody>
-          <Row className="h3 text-muted text-right mb-2">
-       <div  onClick={() => this.setState({ showEditOwner: true })}>{this.state.owner === undefined ? '' : this.state.owner.userName}
-      <i className={card.icon} ></i>
-    </div>     
-   </Row>
-
-
-           
-            
-            <div className="h4 mb-0">{header}</div>
-            <small className="text-muted text-uppercase font-weight-bold">{this.state.inhabitants === undefined || this.state.inhabitants.length === 0 ? '未绑定' : '绑定' + this.state.inhabitants.length + '人'}</small>
-            <Progress className={progress.style} color={progress.color} value={this.state.inhabitants === undefined ? 0 : this.state.inhabitants.length * 10} />
+            <Row >
+              <Col xs="6" sm="8">
+                <div className="h3 mb-0">{owner === undefined ? '' : owner.userName}</div>
+              </Col><Col xs="6" sm="4">
+                <div className="h1 text-muted text-right mb-2"> <i className={card.icon} ></i>
+                </div></Col>
+            </Row>{/* <Row>
+          <div className="h3 text-muted text-right mb-2" onClick={() => this.setState({ showEditOwner: true })}>{owner === undefined ? '' : owner.userName}               
+             
+            <i className={card.icon}></i>
+          </div></Row> */}
+            <div className="h3 mb-0">{header}</div>
+            {/*  <div onClick={() => this.setState({ showEditOwner: true })}>{owner === undefined ? '' : owner.userName}               
+              </div> */}
+            <small className="text-muted text-uppercase font-weight-bold">{inhabitants === undefined || inhabitants.length === 0 ? '未绑定' : '绑定' + inhabitants.length + '人'}</small>
+            <Progress className={progress.style} color={progress.color} value={inhabitants === undefined ? 0 : inhabitants.length * 10} />
           </CardBody>
         </Card>
         <TopModal style={{ "max-width": "350px" }} isOpen={this.state.showEditOwner} toggle={() => this.toggleShowEditOwner()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditOwner()}>户主信息</ModalHeader>
           <ModalBody>
-            <EditOwnerForm onSubmit={this.submit} closeForm={this.toggleShowEditOwner} header={header} name={this.state.owner === undefined ? '' : this.state.owner.userName} phone={this.state.owner === undefined ? '' : this.state.owner.phone} />
+            <EditOwnerForm onSubmit={this.submit} closeForm={this.toggleShowEditOwner} header={header} name={owner === undefined ? '' : owner.userName} phone={owner === undefined ? '' : owner.phone} />
           </ModalBody>
         </TopModal>
       </div>
@@ -160,17 +112,30 @@ class RoomWidget extends Component {
 
 RoomWidget.propTypes = propTypes;
 RoomWidget.defaultProps = defaultProps;
-const mapStateToProps = (state) => {
-  console.log('mapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToPropsmapStateToProps')
-
+const mapStateToProps = (state, ownProps) => {
   let inhabitantList = state.inhabitantList
-  console.log(inhabitantList)
-  return { inhabitantList }
+  let inhabitants
+  let owner
+  let { buildingId, unit, floor, room } = ownProps
+  if (inhabitantList !== undefined && inhabitantList.length > 0) {
+    let findInhabitants = inhabitantList[inhabitantList.findIndex(value => {
+      return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
+    })]
+    if (findInhabitants !== undefined) {
+      inhabitants = findInhabitants.inhabitants
+      if (inhabitants !== undefined) {
+        let ownerIndex = inhabitants.findIndex(value => value.category === 1)
+        if (ownerIndex >= 0) {
+          owner = {}
+          owner.userName = inhabitants[ownerIndex].name
+          owner.phone = inhabitants[ownerIndex].phone
+        }
+      }
+    }
+  }
+  return { inhabitantList, inhabitants, owner }
 }
-
-
 RoomWidget = connect(
   mapStateToProps
 )(RoomWidget)
-
 export default RoomWidget;

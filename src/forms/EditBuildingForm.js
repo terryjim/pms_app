@@ -35,16 +35,19 @@ class EditBuildingForm extends Component {
   }
   selectUnit = (event) => {//更改单元后填充楼层信息 
     let unit = event.target.value
-    this.setState({ selectedUnit: unit })   //记录选中单元信息
-    this.setState({ selectedUnitName: this.props.initialValues._original.structure[unit].unit })
-    this.setState({ floors: this.props.initialValues._original.structure[unit].floors })
- 
+    if (unit != undefined && unit !== '') {
+      this.setState({ selectedUnit: unit })   //记录选中单元信息
+      this.setState({ selectedUnitName: this.props.initialValues._original.structure[unit].unit })
+      this.setState({ floors: this.props.initialValues._original.structure[unit].floors })
+    }
   }
   selectFloor = (event) => {//更改单元后填充楼层信息
     let floor = event.target.value
-    this.setState({ selectedFloor: floor })
-    this.setState({ selectedFloorName: this.state.floors[floor].name })
-    this.setState({ rooms: this.state.floors[floor].rooms })
+    if (floor != undefined && floor !== '') {
+      this.setState({ selectedFloor: floor })
+      this.setState({ selectedFloorName: this.state.floors[floor].name })
+      this.setState({ rooms: this.state.floors[floor].rooms })
+    }
   }
 
   render() {
@@ -54,80 +57,53 @@ class EditBuildingForm extends Component {
       structure = []
 
     return (
-      <form onSubmit={handleSubmit} >
+      <form /* onSubmit={handleSubmit} */ >
+        <Container>
+          <Field name="id" component="input" type="hidden" label="id" />
+          <Label>{initialValues.name}</Label>
+          <Container><FormGroup row>
+            <Label sm={3} for="unit">单元号</Label>
+            <Col sm={3}>
+              <div onChange={this.selectUnit}><Field name="unit" component="select" >
+                <option value="">请选择单元</option>
+                {structure.map((struc, index) => (
+                  <option value={index} key={index}>
+                    {struc.unit}
+                  </option>
+                ))}
+              </Field></div>
+            </Col>
+            <Label sm={3} for="floors">楼层号</Label>
+            <Col sm={3}>
+              <div onChange={this.selectFloor}><Field name="floor" component="select">
+                <option value="">请选择楼层单元</option>
+                {this.state.floors.map((f, index) => (
+                  <option value={index} key={f.name}>
+                    {f.name}
+                  </option>
+                ))}
+              </Field>
+              </div>
+            </Col>
+          </FormGroup></Container>
 
-        <Field name="id" component="input" type="hidden" label="id" />
-        <Label>{initialValues.name}</Label>
-        <Container><FormGroup row>
-          <Label sm={3} for="unit">单元号</Label>
-          <Col sm={3}>
-            <div onChange={this.selectUnit}><Field name="unit" component="select" >
-              <option value="">请选择单元</option>
-              {structure.map((struc, index) => (
-                <option value={index} key={index}>
-                  {struc.unit}
-                </option>
-              ))}
-            </Field></div>
-          </Col>
-          <Label sm={3} for="floors">楼层号</Label>
-          <Col sm={3}>
-            <div onChange={this.selectFloor}><Field name="floor" component="select">
-              <option value="">请选择楼层单元</option>
-              {this.state.floors.map((f, index) => (
-                <option value={index} key={f.name}>
-                  {f.name}
-                </option>
-              ))}
-            </Field>
-            </div>
-          </Col>
-        </FormGroup></Container>
+          <Label>房间分配</Label>
 
-        <Label>房间分配</Label>
-       
-        <Row>
-          {this.state.rooms.map(room => {
-            return (
-              <Col sm="6" md="2">
-                <RoomWidget key={room} icon="icon-user-follow" color="success" value="55" buildingId={initialValues.id} projectId={initialValues.projectId} unit={this.state.selectedUnitName} floor={this.state.selectedFloorName} room={room} invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room} />
-              </Col>)
-          })}
-          {/* <Col sm="6" md="2">
-            <Widget icon="icon-people" color="info" header="87.500" value="25" invert>Visitors</Widget>
-          </Col>
-          <Col sm="6" md="2">
-            <Widget icon="icon-user-follow" color="success" header="385" value="25" invert>New Clients</Widget>
-          </Col>
-          <Col sm="6" md="2">
-            <Widget icon="icon-basket-loaded" color="warning" header="1238" value="25" invert>Products sold</Widget>
-          </Col>
-          <Col sm="6" md="2">
-            <Widget icon="icon-pie-chart" color="primary" header="28%" value="25" invert>Returning Visitors</Widget>
-          </Col>
-          <Col sm="6" md="2">
-            <Widget icon="icon-speedometer" color="danger" header="5:34:11" value="25" invert>Avg. Time</Widget>
-          </Col>
-          <Col sm="6" md="2">
-            <Widget icon="icon-speech" color="info" header="972" value="25" invert>Comments</Widget>
-          </Col> */}
-        </Row>
-
-
-       
-        <Row className="align-items-center">
-          <Col col='9' />
-          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-            <Button block color="primary" hidden={readOnly} type="submit" disabled={submitting}>提交</Button>
-          </Col>
-          {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-                <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
-              </Col>     */}
-          <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-            <Button block color="danger" onClick={closeForm}>关闭</Button>
-          </Col>
-        </Row>
-
+          <Row>
+            {this.state.rooms.map(room => {
+              return (
+                <Col sm="6" md="3">
+                  <RoomWidget key={room} icon="icon-user-follow" color="success" value="55" buildingId={initialValues.id} projectId={initialValues.projectId} unit={this.state.selectedUnitName} floor={this.state.selectedFloorName} room={room} invert header={this.state.selectedUnitName + '-' + this.state.selectedFloorName + '-' + room} />
+                </Col>)
+            })}
+          </Row>
+          <Row className="align-items-center">
+            <Col sm="8" md="10" />
+            <Col sm="4" md="2" xl className="mb-3 mb-xl-0">
+              <Button block color="danger" onClick={closeForm}>关闭</Button>
+            </Col>
+          </Row>
+        </Container>
       </form>
     );
   }

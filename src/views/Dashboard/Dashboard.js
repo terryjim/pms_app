@@ -477,7 +477,9 @@ class Dashboard extends Component {
   }
 
   render() {
-
+if(2>1)
+return null
+else
     return (
       <div className="animated fadeIn">
         <Row>

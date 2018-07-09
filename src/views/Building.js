@@ -31,7 +31,10 @@ class Building extends Component {
   }
 
 
-
+  componentDidMount() {    
+   
+    }
+ 
 
   //切换编辑窗口状态（开、闭）
   toggleShowEditBuilding = () => {
@@ -74,21 +77,21 @@ class Building extends Component {
     accessor: d => d.category == 1 ? '社区' : d.category == 2 ? '商办' : d.category == 3 ? '社区与商办' : '',
     Header: '楼栋类型',
   }, {
+    accessor: 'remark',
+    Header: '备注',
+  }, {
     id: 'unit',
     accessor: d => {     
       if (d.structure != undefined )      
         return d.structure.length
     },
-    Header: '单元数',
+    Header: '单元数',filterable: false,
   }, {
     id: 'floors',
     accessor: d => {
       if (d.structure != undefined && d.structure[0] != undefined&& d.structure[0].floors != undefined)
         return d.structure[0].floors.length
-    }, Header: '楼层数',
-  }, {
-    accessor: 'remark',
-    Header: '备注',
+    }, Header: '楼层数',filterable: false,
   }
   ];
 
@@ -96,7 +99,7 @@ class Building extends Component {
 
     let buildings = this.props.buildings
     return (
-      <div className="animated fadeIn">       
+      <div className="animated fadeIn">   
         <ReactTable keyField='id' data={buildings.content}
           pages={buildings.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
           className="-striped -highlight"
@@ -142,7 +145,7 @@ class Building extends Component {
 
         <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼栋信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditBuilding()}>住户分配信息</ModalHeader>
           <ModalBody>
             <EditBuildingForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditBuilding} />
           </ModalBody>
