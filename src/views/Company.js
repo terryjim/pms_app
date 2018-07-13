@@ -98,6 +98,7 @@ class Company extends Component {
   }
   submit = (values) => {
     console.log(values)
+    return
     this.props.dispatch(saveForm(values, 'company'))
     //this.setState({ showEditCompany: false })
   }

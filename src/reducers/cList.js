@@ -49,10 +49,11 @@ const cList = (state = {}, action) => {
     if (action.type === 'GET_LIST') {
         if (action.data != null)
             state = Object.assign({}, action.data)
+        else
+            state=Object.assign({}, {})
         //console.log(state)
     }
-    if (action.type === 'ADD_TO_GRID') {
-        //console.log(action.data)
+    if (action.type === 'ADD_TO_GRID') {       
         if (action.data != null) {
             //console.log(action.data)
             //如果存在相由的id说明是修改记录，则先删除state中原记录           
@@ -63,6 +64,7 @@ const cList = (state = {}, action) => {
                 state.content.splice(0, 0, action.data);
             //state.push(action.data)
             state = Object.assign({}, state)
+            
         }
     }
     if (action.type === 'DEL_FROM_GRID') {
@@ -97,6 +99,8 @@ const cList = (state = {}, action) => {
             state = Object.assign({}, state)
         }
     }
+    console.log('-----------------------------------------------')
+            console.log(state)
     return state;
 }
 export default cList;

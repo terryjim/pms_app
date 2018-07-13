@@ -22,6 +22,20 @@ const Companies= Loadable({
   loader: () => import('./views/Company'),
   loading: Loading,
 })
+const Hotlines= Loadable({
+  loader: () => import('./views/Hotline'),
+  loading: Loading,
+})
+const Notices= Loadable({
+  loader: () => import('./views/Notice'),
+  loading: Loading,
+})
+const ImportCards= Loadable({
+  loader: () => import('./forms/ImportCards'),
+  loading: Loading,
+})
+/////////////////
+
 const Breadcrumbs = Loadable({
   loader: () => import('./views/Base/Breadcrumbs'),
   loading: Loading,
@@ -195,9 +209,11 @@ const routes = [
  
   { path: '/info/buildings', name: '楼栋管理', component: Buildings },
   { path: '/inhabitant/importOwners', name: '导入业主', component: ImportOwners },
+  { path: '/inhabitant/importCards', name: '导入门禁卡', component: ImportCards },
   { path: '/inhabitant/owners', name: '业主列表', component: Owners },
   { path: '/owner/companies', name: '企业列表', component: Companies },
-
+  { path: '/property/hotlines', name: '客服管理', component: Hotlines },
+  { path: '/property/notice', name: '公告管理', component: Notices },
 
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   

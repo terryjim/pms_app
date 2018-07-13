@@ -22,8 +22,7 @@ class Login extends Component {
       return <Redirect push to="/" />
     } else */
     return (
-      <div className="app flex-row align-items-center">
-       <img src="%PUBLIC_URL%/img/logo.png"/>
+      <div className="app flex-row align-items-center">      
          <ErrModal/><SuccessModal/><ConfirmModal/><LoadingModal/>
         <Container>
           <Row className="justify-content-center">

@@ -2,37 +2,39 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
-import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
-import EditPropertyForm from '../forms/EditPropertyForm'
+import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import EditNoticeForm from '../forms/EditNoticeForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 
 const CheckboxTable = checkboxHOC(ReactTable);
-class Property extends Component {
+//企业列表
+class Notice extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showEditNotice: false,//显示修改表单
+      showDanger: false,   //显示错误信息
+      selection: [],
+      edit: false,//是否为编辑状态
+      selectAll: false,
+    };
+  }
+
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
   componentWillReceiveProps(nextProps) {
     //确认删除记录操作    
-    if (nextProps.confirmDel) {
-      this.props.dispatch(delList(this.state.selection, 'property'))
+    if (nextProps.confirmDel) {     
+      this.props.dispatch(delList(this.state.selection, 'owner'))
     }
+    if (nextProps.closeModal)    //保存成功后关闭表单窗口
+      this.setState({ showEditNotice: false })
   }
-  constructor(props) {
-    super(props);
-    this.state = {
-      showEditProperty: false,//显示修改表单
-      showDanger: false,   //显示错误信息
-      /*    showProperty: false,   */
-      selection: [],
-      edit: false,//是否为编辑状态
-      selectAll: false,
-    };
-  }
-  
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -81,36 +83,26 @@ class Property extends Component {
     */
     return this.state.selection.includes(key);
   };
+
   //切换编辑窗口状态（开、闭）
-  toggleShowEditProperty = () => {
+  toggleShowEditNotice = () => {
     this.setState({
-      showEditProperty: !this.state.showEditProperty,
+      showEditNotice: !this.state.showEditNotice,
     });
   }
-  //切换查看窗口状态（开、闭）
-  /*   toggleShowProperty = () => {
-      this.setState({
-        showProperty: !this.state.showProperty,
-      });
-    } */
   //切换错误窗口状态（开、闭）  
   toggleShowDanger = () => {
     this.setState({
       showDanger: !this.state.showDanger,
     });
   }
-  submit = (values) => {
-    console.log(values)
-
-    this.props.dispatch(saveForm(values, 'property'))
-    this.setState({ showEditProperty: false })
+  submit = (values,editor) => {
+    alert(JSON.stringify(values))
+    return
+    this.props.dispatch(saveForm(values, 'notice'))
+    //this.setState({ showEditNotice: false })
   }
   columns = [{
-    accessor: 'id',
-    Header: 'id',
-    show: false,
-
-  }, {
     Header: '',
     sortable: false,
     width: 60,
@@ -121,7 +113,8 @@ class Property extends Component {
           (e) => {
             e.stopPropagation()
             this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ showEditProperty: true, edit: true })
+            this.setState({ selection: [c.row.id] })
+            this.setState({ showEditNotice: true, edit: true })
           }
         }>
       </a>
@@ -130,70 +123,93 @@ class Property extends Component {
         onClick={
           e => {
             e.stopPropagation()
-            this.setState({selection:[c.row.id]})
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'))
+            this.setState({ selection: [c.row.id] })
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'notice', 'del'))
           }
         }>
       </a>
     </div>)
   }, {
-    accessor: 'companyName',
-    Header: '物业名称',
-    width: 400,
+    accessor: 'id',
+    Header: 'id',
+    // show: false,
   }, {
-    accessor: 'enabled',
-    Header: '状态',
-    width: 80,
-    Cell: row => (!row.value ? (<Badge color="primary">启用中</Badge>) : (<Badge color="danger">已禁用</Badge>))
-  },  /*{
-    //accessor: 'enabled',
-    id:'enabled',
-    Header: '状态',
-    width: 80,
-    accessor: d => (d.enabled ? ( <Badge color="primary">启用中</Badge>) : ( <Badge color="danger">已禁用</Badge>))
-  },*/ {
-    accessor: 'remark',
-    Header: '备注',
+    accessor: 'name',
+    Header: '企业名称',
+
+  }, {
+    accessor: 'phone',
+    Header: '联系电话',
+
+  }, {
+    accessor: 'buildingId',
+    Header: '楼栋ID',
+    show: false,
+  }, {
+    accessor: 'buildingName',
+    Header: '所在楼栋',
+
+  }, {
+    accessor: 'owner',
+    Header: '企业ＩＤ',
+
+  }, {
+    id: 'location',
+    Header: '房号',
+    //width: 60,
+    filterable: false,
+    accessor: d => {
+      try {
+        let location = ''
+        d.location.map(loc => {
+          location += loc.unit + '-' + loc.floor + '-' + loc.room + ','
+        })
+        //去掉最后的逗号    
+        return location.slice(0, location.length - 1)
+      } catch (e) { return '' }
+    },
   }
   ];
 
   render() {
-    const { toggleSelection, toggleAll, isSelected } = this;
-    const { selectAll } = this.state;
+    const { toggleSelection, toggleAll, isSelected } = this
+    const { selectAll } = this.state
     const checkboxProps = {
       selectAll,
       isSelected,
       toggleSelection,
       toggleAll,
       selectType: "checkbox",
-    };
-    let Properties = this.props.Properties
-
+    }
+    let vOwners = this.props.vOwners
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditProperty: true, edit: true }) }}>新增</Button>
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditNotice: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
           else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'property', 'del'));
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'notice', 'del'));
         }}>删除</Button>
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Properties.content}
-          pages={Properties.totalPages} columns={this.columns} defaultPageSize={10} filterable
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={vOwners.content}
+          pages={vOwners.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
           className="-striped -highlight"
-          /* onPageChange={(pageIndex) => this.props.dispatch(getProperty({page:pageIndex,size:10}))}  */
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           onFetchData={(state, instance) => {
-            let whereSql = ''
+            let whereSql = ' and category=2'
             state.filtered.forEach(
-              v => {
-                if (v.id == 'enabled') {
-                  whereSql = whereSql + ' and enabled=' + (v.value == 1 ? 0 : 1)
-                } else
-                  whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
+              v => whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
+            )
+            state.sorted.forEach(
+              (v, index) => {
+                if (index === 0)
+                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
+                else
+                  whereSql += ' and ' + v.id + (v.desc ? " desc" : " asc")
               }
             )
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'property'))
+
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'vOwner'))
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
@@ -201,13 +217,12 @@ class Property extends Component {
               if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
                 style.background = '#c8e6c9';
               }
-              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
-                style.background = '#62c2de';
-              }
+
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
+                  return null
                   this.props.dispatch(fillForm(rowInfo.row));
-                  this.setState({ showEditProperty: true, edit: false })
+                  this.setState({ showEditNotice: true, edit: false })
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
@@ -225,29 +240,29 @@ class Property extends Component {
           {...checkboxProps}
         />
 
-        <TopModal isOpen={this.state.showEditProperty} toggle={() => this.toggleShowEditProperty()}
+        <TopModal style={{ "max-width": "850px" }} isOpen={this.state.showEditNotice} toggle={() => this.toggleShowEditNotice()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditProperty()}>物业公司信息</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditNotice()}>公告信息</ModalHeader>
           <ModalBody>
-            <EditPropertyForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditProperty} />
+            <EditNoticeForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditNotice} />
           </ModalBody>
         </TopModal>
-
       </div>
     )
   }
 }
-//获取property记录集及修改记录ＩＤ数组
+//获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
-  let Properties = state.cList
-  console.log(Properties)
+  let vOwners = state.cList
+  let success = state.success
+  console.log(vOwners)
   let editedIds = state.editedIds
-  let confirmDel = state.confirm.module === 'property' && state.confirm.operate === 'del' ? state.confirm.confirm : false
-  return { Properties, editedIds, confirmDel }
+  let confirmDel = state.confirm.module === 'notice' && state.confirm.operate === 'del' ? state.confirm.confirm : false
+  return { closeModal: success.show, vOwners, editedIds, confirmDel }
 }
 
 
-Property = connect(
+Notice = connect(
   mapStateToProps
-)(Property)
-export default Property;
+)(Notice)
+export default Notice;
