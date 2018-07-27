@@ -34,9 +34,18 @@ class RoomWidget extends Component {
       showEditOwner: false,//显示修改表单
     }
   }
-  componentWillMount() {
+  componentDidMount() {    
     let inhabitantList = this.props.inhabitantList
-    let { buildingId, unit, floor, room } = this.props
+    let { buildingId, unit, floor, room,projectId } =this.props   
+    if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
+      return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
+    }) < 0) {
+      this.props.dispatch(getInhabitantsByRoom({ buildingId, unit, floor, room }))
+    }
+  }
+  componentWillReceiveProps(nextProps) {
+    let inhabitantList = this.props.inhabitantList
+    let { buildingId, unit, floor, room,projectId } =nextProps
     if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {

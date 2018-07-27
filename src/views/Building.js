@@ -58,7 +58,7 @@ class Building extends Component {
   columns = [{
     accessor: 'id',
     Header: 'id',
-   // show: false,
+    show: false,
 
   }, {
     accessor: 'projectName',
@@ -171,7 +171,7 @@ class Building extends Component {
 //获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let buildings = state.cList
-  console.log(buildings)
+
   let editedIds = state.editedIds
 
   return { buildings, editedIds }

@@ -30,10 +30,23 @@ const Notices= Loadable({
   loader: () => import('./views/Notice'),
   loading: Loading,
 })
+const Tickets= Loadable({
+  loader: () => import('./views/Ticket'),
+  loading: Loading,
+})
 const ImportCards= Loadable({
   loader: () => import('./forms/ImportCards'),
   loading: Loading,
 })
+const CardManaged= Loadable({
+  loader: () => import('./views/CardManaged'),
+  loading: Loading,
+})
+const HardwareStatus=Loadable({
+  loader: () => import('./views/HardwareStatus'),
+  loading: Loading,
+})
+
 /////////////////
 
 const Breadcrumbs = Loadable({
@@ -214,7 +227,9 @@ const routes = [
   { path: '/owner/companies', name: '企业列表', component: Companies },
   { path: '/property/hotlines', name: '客服管理', component: Hotlines },
   { path: '/property/notice', name: '公告管理', component: Notices },
-
+  { path: '/property/ticket', name: '物业报修', component: Tickets },
+  { path: '/property/CardManaged', name: '物业卡管理', component: CardManaged },
+  { path: '/property/HardwareStatus', name: '门禁设备状态', component: HardwareStatus },
   { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
   
   { path: '/theme/typography', name: '楼栋管理', component: Buildings },

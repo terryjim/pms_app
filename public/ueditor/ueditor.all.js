@@ -8024,13 +8024,13 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             if(!serverUrl && imageUrl) {
                 serverUrl = imageUrl.replace(/^(.*[\/]).+([\.].+)$/, '$1controller$2');
             }
-
-            if(serverUrl) {
+//直传oss注释下面--terry20180719
+          /*   if(serverUrl) {
                 serverUrl = serverUrl + (serverUrl.indexOf('?') == -1 ? '?':'&') + 'action=' + (actionName || '');
                 return utils.formatUrl(serverUrl);
             } else {
                 return '';
-            }
+            } */
         }
     };
     utils.inherits(Editor, EventBase);

@@ -117,13 +117,13 @@ export const delFromGrid = (ids, module) => {
     }
 }
 //获取列表
-export const getList = ({ whereSql, page, size, orderBy }, module) => dispatch => {
+export const getList = ({ whereSql, page, size, sort }, module) => dispatch => {
     //不能用headers=new Headers()，否则跨域出错
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken
     //orderBy
-    let body = JSON.stringify({ whereSql, page, size, orderBy })
+    let body = JSON.stringify({ whereSql, page, size, sort })
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')
@@ -150,7 +150,9 @@ export const getListResult = (json) => (
         data: json
     }
 )
-
+export const clearCList=()=>(
+    {type:'CLEAR_LIST'}
+)
 //保存表单
 export const saveForm = (values, module) => dispatch => {
     //不能用headers=new Headers()，否则跨域出错

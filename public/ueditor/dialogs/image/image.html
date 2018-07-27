@@ -4,25 +4,26 @@
     <meta charset="UTF-8">
     <title>ueditor图片对话框</title>
     <script type="text/javascript" src="../internal.js"></script>
-
+ 
     <!-- jquery -->
     <script type="text/javascript" src="../../third-party/jquery-1.10.2.min.js"></script>
-
+ 
     <!-- webuploader -->
     <script src="../../third-party/webuploader/webuploader.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../../third-party/webuploader/webuploader.css">
-
+ 
     <!-- image dialog -->
     <link rel="stylesheet" href="image.css" type="text/css" />
+  <script src="../../plupload/plupload.full.min.js"></script>
 </head>
 <body>
-
+ 
     <div class="wrapper">
-        <div id="tabhead" class="tabhead">
-            <span class="tab" data-content-id="remote"><var id="lang_tab_remote"></var></span>
-            <span class="tab focus" data-content-id="upload"><var id="lang_tab_upload"></var></span>
-            <span class="tab" data-content-id="online"><var id="lang_tab_online"></var></span>
-            <span class="tab" data-content-id="search"><var id="lang_tab_search"></var></span>
+        <div id="tabhead" class="panel tabhead focus">
+            <span class="tab focus" data-content-id="remote"><var id="lang_tab_remote"></var></span>
+            <!--<span class="tab focus" data-content-id="upload"><var id="lang_tab_upload"></var></span>-->
+            <!--<span class="tab" data-content-id="online"><var id="lang_tab_online"></var></span>-->
+            <!--<span  data-content-id="search"><var id="lang_tab_search"></var></span>-->
         </div>
         <div class="alignBar">
             <label class="algnLabel"><var id="lang_input_align"></var></label>
@@ -35,7 +36,7 @@
             <input id="align" name="align" type="hidden" value="none"/>
         </div>
         <div id="tabbody" class="tabbody">
-
+ 
             <!-- 远程图片 -->
             <div id="remote" class="panel">
                 <div class="top">
@@ -47,8 +48,8 @@
                 <div class="left">
                     <div class="row">
                         <label><var id="lang_input_size"></var></label>
-                        <span><var id="lang_input_width">&nbsp;&nbsp;</var><input class="text" type="text" id="width"/>px </span>
-                        <span><var id="lang_input_height">&nbsp;&nbsp;</var><input class="text" type="text" id="height"/>px </span>
+                        <span><var id="lang_input_width">  </var><input class="text" type="text" id="width"/>px </span>
+                        <span><var id="lang_input_height">  </var><input class="text" type="text" id="height"/>px </span>
                         <span><input id="lock" type="checkbox" disabled="disabled"><span id="lockicon"></span></span>
                     </div>
                     <div class="row">
@@ -64,12 +65,42 @@
                         <span><input class="text" type="text" id="title"/></span>
                     </div>
                 </div>
+              <!--start-->
+              <div class="container">
+                <form class="form-horizontal" id="form1">
+                  <div class="form-group" id="upload1">
+                    <!--<div class="col-xs-9" style="display: none">-->
+                    <!--<span>-->
+                    <!--图片地址-->
+                    <!--</span>-->
+                    <!--<input type="text" class="form-control" id="photo" name="photo" readonly style="background-color: white">-->
+                    <!--</div>-->
+                    <div class="col-xs-9 col-xs-offset-3">
+                      <span  class="label label-default ">图片文件</span> <span id="file-text">未选择</span><br>
+                      <button class="btn btn-primary btn-sm" id="select-btn" type="button">添加图片</button>
+                      <!--<button class="btn btn-default btn-sm" id="upload-btn" type="button">上传图片</button>-->
+                    </div>
+                    <div class="col-xs-9 col-xs-offset-3 area" style="margin-top: 10px;display: none">
+                      <div class="progress">
+                        <div id="upload-progress" class="progress-bar" role="progressbar" aria-valuenow="0"
+                             aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
+                          0%
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-9 col-xs-offset-3 area" style="margin-top: 10px;display: none">
+                      <span class="label label-danger ">提示</span> <span id="error-text">请先选择文件</span>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <!--end-->
                 <div class="right"><div id="preview"></div></div>
             </div>
-
+ 
             <!-- 上传图片 -->
-            <div id="upload" class="panel focus">
-                <div id="queueList" class="queueList">
+            <div id="upload"  class="panel">
+                <div id="queueList" class="queueList" style="display: none">
                     <div class="statusBar element-invisible">
                         <div class="progress">
                             <span class="text">0%</span>
@@ -90,31 +121,178 @@
                     </ul>
                 </div>
             </div>
-
-            <!-- 在线图片 -->
-            <div id="online" class="panel">
-                <div id="imageList"><var id="lang_imgLoading"></var></div>
-            </div>
-
-            <!-- 搜索图片 -->
-            <div id="search" class="panel">
-                <div class="searchBar">
-                    <input id="searchTxt" class="searchTxt text" type="text" />
-                    <select id="searchType" class="searchType">
-                        <option value="&s=4&z=0"></option>
-                        <option value="&s=1&z=19"></option>
-                        <option value="&s=2&z=0"></option>
-                        <option value="&s=3&z=0"></option>
-                    </select>
-                    <input id="searchReset" type="button"  />
-                    <input id="searchBtn" type="button"  />
-                </div>
-                <div id="searchList" class="searchList"><ul id="searchListUl"></ul></div>
-            </div>
-
         </div>
     </div>
     <script type="text/javascript" src="image.js"></script>
-
+ 
 </body>
 </html>
+<script>
+  function get_oss_sign(dir) {
+    /*
+    * 获取阿里云oss直传签名给window.oss_sign
+    * oss_sign.make_random_filename(filename)可获取一个随机文件名
+    * oss_sign.oss_cdn为文件cdn的url域名
+    * */
+    if(!window.oss_sign){
+      window.oss_sign = null;
+    }
+    dir = dir ? dir : 'default';
+    //var oss_sign_server = '/oss_sign/?dir=' + dir; // 获取后端签名ajax的url
+    var oss_sign_server = 'http://localhost:9001/oss/getParams'
+    function get_signature() {
+      //可以判断当前expire是否超过了当前时间,如果超过了当前时间,就重新取一下.3s 做为缓冲
+      var now = Date.parse(new Date()) / 1000;
+      var expire = oss_sign ? oss_sign.expire : 0;
+      if (expire < now + 3) {
+        $.ajax({
+          url: oss_sign_server,
+          method: 'POST',
+          data: {return_style: 'json'},
+          async: false,
+          complete: function (req, status) {            
+            if (status == 'success') {
+              oss_sign = req.responseJSON;
+              oss_sign=oss_sign['data']            
+              oss_sign.make_random_filename = make_filename;
+              return true;
+            }
+          }
+        });
+      }
+      return false;
+    };
+ 
+ 
+    function random_string(len) {
+      len = len || 32;
+      var chars = 'abcdefhijkmnprstwxyz';
+      var maxPos = chars.length;
+      var pwd = '';
+      for (var i = 0; i < len; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+      }
+      return pwd;
+    }
+ 
+    function get_suffix(filename) {
+      var pos = filename.lastIndexOf('.')
+      var suffix = ''
+      if (pos != -1) {
+        suffix = filename.substring(pos)
+      }
+      return suffix;
+    }
+ 
+    function make_filename(filename) {
+      var suffix = get_suffix(filename);
+      return oss_sign.dir + oss_sign.time_string + random_string(4) + suffix
+    }
+ 
+    get_signature()
+  }
+ 
+  // 实例化上传文件
+  var uploader1 = new plupload.Uploader({
+    runtimes: 'html5,flash,silverlight,html4',
+    browse_button: $("#upload1 #select-btn")[0],
+    flash_swf_url: '../../plupload/Moxie.swf',
+    silverlight_xap_url: '../../plupload/js/Moxie.xap',
+    url: 'http://oss.aliyuncs.com',
+    multi_selection: false,
+    filters: {
+      mime_types: [
+        {title: "Image/jpeg", extensions: "jpg"},
+        {title: "Image/png", extensions: "png"},
+        // {title: "Video/mp4", extensions: "mp4"} // 视频文件
+      ],
+      max_file_size: '5mb'
+    },
+    resize: {
+      quality: 30
+    },
+    init: {
+      PostInit: function (up) {
+         //  $("#upload1 #upload-btn").click(function () {
+         //     up.start()
+         // });
+      },
+ 
+      FilesAdded: function (up, files) {
+        // 只保留最后一个文件
+        var file_num = up.files.length;
+        if(file_num > 1){
+          up.splice(0, file_num - 1) // 移除文件
+        }
+ 
+        $("#upload1 #file-text").text(files[0].name + ' (' + plupload.formatSize(files[0].size) + ')');
+        $("#upload1 #upload-progress").parents(".area").hide();
+        $("#upload1 #error-text").parents(".area").hide()
+ 
+       up.start() //直接上传
+ 
+      },
+ 
+      BeforeUpload: function (up, file) {
+        $("#upload1 #upload-progress").text('0%');
+        $("#upload1 #upload-progress").css('width', '0%');
+        $("#upload1 #upload-progress").parents(".area").show();
+ 
+        // 封装请求
+        get_oss_sign('test/');  // 如果上传成功，会在阿里云oss客户端创建一个test文件夹，文件在其内部
+        file.remote_filename = oss_sign.make_random_filename(file.name); // 记录上传后文件名
+        var new_multipart_params = {
+          'key': file.remote_filename,
+          'policy': oss_sign.policy,
+          'OSSAccessKeyId': oss_sign.accessid,
+          'success_action_status': '200', //让服务端返回200,不然，默认会返回204
+          'signature': oss_sign.signature
+        };
+        up.setOption({
+          'url': oss_sign.host,
+          'multipart_params': new_multipart_params
+        });
+      },
+ 
+      UploadProgress: function (up, file) {
+        var percent = file.percent + '%';
+        $("#upload1 #upload-progress").text(percent);
+        $("#upload1 #upload-progress").css("width", percent);
+ 
+      },
+ 
+      FileUploaded: function (up, file, info) {
+ 
+        $("#upload1 #error-text").parents(".area").show();
+        if (info.status == 200) {
+          $("#upload1 #error-text").text("上传完成");
+          // $("#upload1 #photo").val(oss_sign.oss_cdn + file.remote_filename)
+          // $('#url').val(oss_sign.oss_cdn + file.remote_filename); // 如果有cnd
+          $('#url').val(oss_sign.host + '/' + file.remote_filename); // 如果没cnd
+        }
+        else {
+          $("#upload1 #error-text").text("上传出现未知错误，请联系管理员");
+        }
+      },
+ 
+      Error: function (up, err) {
+        $("#upload1 #error-text").parents(".area").show();
+        if (err.code == -600) {
+          $("#upload1 #error-text").text("选择的文件太大了");
+        }
+        else if (err.code == -601) {
+          $("#upload1 #error-text").text("传文件类型不正确");
+        }
+        else if (err.code == -602) {
+          $("#upload1 #error-text").text("这个文件已经上传过一遍了");
+        }
+        else {
+          $("#upload1 #error-text").text("未知错误，请联系管理员");
+        }
+      }
+    }
+  });
+ 
+  uploader1.init();
+ 
+</script>

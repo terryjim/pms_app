@@ -1,5 +1,5 @@
-//const defaultUrl = "/"
-const defaultUrl = "http://192.168.10.153:81/"
+//const defaultUrl = "http://118.31.72.47:9001/"
+const defaultUrl = "http://192.168.10.153:9001/"
 const TParams = {
     defaultUrl:defaultUrl,
     defaultPageSize: 20,
@@ -28,7 +28,9 @@ const TParams = {
 
         getProjectList: defaultUrl + 'project/getList',//获取楼盘列表
         getPropertyList: defaultUrl + 'property/getList',//获取物业公司列表
-
+        markTicketCompleted:defaultUrl + 'ticket/markCompleted',//标记工单完成
+        get_hardware_list:defaultUrl + 'accessControlStatus/getAllByDepartment',//获取门禁硬件列表
+        getHardwareStatus:defaultUrl + 'accessControlStatus/getStatus',//获取门禁硬件在线状态
     }
 }
 window.TParams = TParams

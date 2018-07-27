@@ -105,7 +105,7 @@
 }
 #remote .left{
     display: block;
-    float: left;
+   /*  float: left; */
     width: 300px;
     height:10px;
 }
@@ -892,3 +892,31 @@
 #search .searchList .clearFloat{
     clear: both;
 }
+
+.container{
+    margin: 150px 0 0 25px;
+    float: left;
+  }
+   
+  .btn-primary{
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #409EFF;
+    border-color: #409EFF;
+  }
+  

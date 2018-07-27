@@ -1,45 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
+import { clearEditedIds, clearCList, addToGrid } from '../actions/common'
+import { checkHardwareStatus } from '../actions/hardware'
+import { Badge, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import ReactTable from "react-table";
-import "react-table/react-table.css";
-import checkboxHOC from "react-table/lib/hoc/selectTable";
 
-import { getBuildingsByDepartment } from '../actions/building';
+import checkboxHOC from "react-table/lib/hoc/selectTable";
+import 'react-table/react-table.css'
+
 const CheckboxTable = checkboxHOC(ReactTable);
 
-//分配楼栋表格
-class BuildingsAllotTable extends React.Component {
+class HardwareStatus extends Component {
   constructor(props) {
     super(props);
-
-    props.dispatch(getBuildingsByDepartment(props.pid))
     this.state = {
-      unit: props.unit,
-      data: props.data,
       selection: [],
       selectAll: false,
-      //[{name:1,rooms:[01,02,03]}]}]
     };
-    /*  this.renderEditable = this.renderEditable.bind(this);*/
-    //    props.handleTableValues({ unit: props.unit, floors: this.state.data })
   }
   componentDidMount() {
-    //this.props.handleTableValues({ unit: this.props.unit, floors: this.state.data })
-    let buildings = this.props.allotBuildings  
-    if (buildings != undefined&&buildings!='') {
-      buildings = buildings.split(',')
-      let allotBuildings = buildings.map(x => x.id)
-      this.setState({ selection: buildings })
-    }
-  }
-  componentDidUpdate() {
-    this.props.handleTableValues({ buildings: this.state.selection })
-  }
-  componentWillReceiveProps(nextProps) {
-    // this.setState({ data: nextProps.data })
+    this.props.dispatch(getList({}, 'hardware'))
 
   }
-
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -89,68 +72,67 @@ class BuildingsAllotTable extends React.Component {
     return this.state.selection.includes(key);
   };
 
-  /* submit = (values) => {
-     console.log(values)
- 
-     this.props.dispatch(saveForm(values, 'project'))
-     this.setState({ showEditProject: false })
-   }*/
   columns = [{
     accessor: 'id',
     Header: 'id',
-    show: true,
+    show: false,
 
   }, {
-    accessor: 'name',
-    Header: '分配楼栋',
+    accessor: 'title',
+    Header: '门禁名称', filterable: false,
 
-  }
+  }, {
+    accessor: 'hardwareCode',
+    Header: '硬件编号', filterable: false,
+
+  }, {
+    id: 'status',
+    Header: '在线状态', filterable: false,
+    accessor: d => d.status === 1 ? <Badge className="mr-1" color="danger">在线</Badge> : d.status === 2 ? <Badge className="mr-1" color="success">不在线</Badge> : <Badge className="mr-1" color="info">未知状态</Badge>,
+    sortMethod: (a, b) => {     
+      return a.length > b.length ? 1 : -1;
+    }
+  },
+/*   {
+    accessor: 'status',
+    Header: '在线状态', filterable: false,
+  }, */ {
+    accessor: 'updated',
+    Header: '最新在线时间', filterable: false,
+  },
   ];
-
   render() {
-    const { toggleSelection, toggleAll, isSelected } = this;
-    const { selectAll } = this.state;
+    const { toggleSelection, toggleAll, isSelected } = this
+    const { selectAll } = this.state
     const checkboxProps = {
       selectAll,
       isSelected,
       toggleSelection,
       toggleAll,
       selectType: "checkbox",
-    };
-    let buildingList = this.props.buildingList
-
+    }
+    let hardwares = this.props.hardwares
     return (
       <div className="animated fadeIn">
-
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={buildingList}
-          showPagination={false}
-          columns={this.columns}
-          className="-striped -highlight"
-          resizable={false}
-          minRows={3}
+        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(checkHardwareStatus()) }}>查询在线状态</Button>
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={hardwares.content} minRows={3}
           defaultPageSize={999}
-          noDataText='无数据'
+          showPagination={false}
+          columns={this.columns} filterable
+          className="-striped -highlight"
+          /*    manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+             onFetchData={(state, instance) => {
+              // this.props.dispatch(checkHardwareStatus())
+              this.props.dispatch(getList({}, 'hardware'))   
+             }} */
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
               if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
                 style.background = '#c8e6c9';
               }
-              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
-                style.background = '#62c2de';
-              }
               return {
-                style,
-                onClick: (e, handleOriginal) => {
-                  if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
-                  } else {
-                    if (this.state.selection.includes(rowInfo.row.id))
-                      this.setState({ selection: [] })
-                    else
-                      this.setState({ selection: [rowInfo.row.id] })
-                  }
-                }
+                style
               }
             }
           }
@@ -161,19 +143,15 @@ class BuildingsAllotTable extends React.Component {
     )
   }
 }
-//获取project记录集及修改记录ＩＤ数组
+//获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
-  let buildingList = state.buildingList
-  console.log(buildingList)
+  let hardwares = state.cList
 
-  return { buildingList }
+  return { hardwares }
 }
 
 
-BuildingsAllotTable = connect(
+HardwareStatus = connect(
   mapStateToProps
-)(BuildingsAllotTable)
-
-
-
-export default BuildingsAllotTable
+)(HardwareStatus)
+export default HardwareStatus;

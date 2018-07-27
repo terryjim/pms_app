@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
-import { clearEditedIds } from '../actions/common'
+import { clearEditedIds,clearCList} from '../actions/common'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditBuildingForm from '../forms/EditBuildingForm'
 import TopModal from '../components/TopModal'
@@ -24,9 +24,11 @@ class Owner extends Component {
     };
   }
 
-  componentWillMount() {
+  componentWillMount() {  
+   
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
+     
   }
 
 
@@ -170,6 +172,7 @@ return null
 //获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let vOwners = state.cList
+  
   console.log(vOwners)
   let editedIds = state.editedIds
 

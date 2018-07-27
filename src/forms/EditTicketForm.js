@@ -1,55 +1,72 @@
 import React, { Component } from 'react';
-import { Field, reduxForm, change, FieldArray,formValueSelector } from 'redux-form';
+import { Field, reduxForm, change, FieldArray, formValueSelector } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 
 import { InputField, InlineField } from '../components/field'
-import { getBuildingsByDepartment } from '../actions/building'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
 )
 
-const validate = values => {
-  const errors = {}
-  
-  if (!values.buildingId) {
-    errors.buildingId = '楼栋号不能为空'
-  }
-  return errors
-}
 
-let EditHotlineForm = props => {
-  const { dispatch, error, handleSubmit,  readOnly = false,pristine, reset, submitting, closeForm, initialValues} = props;
 
+let EditTicketForm = props => {
+  const { dispatch, error, handleSubmit, readOnly = false, pristine, reset, submitting, closeForm, initialValues } = props;
+  let images = initialValues.images
+  let imgs= (images === undefined ? '' : images.map(item => {           
+       return(         
+       <img src={item} width="100%"/>
+     )}))
+     
+ 
   return (
-    <div className="animated fadeIn">
+    <div className="animated fadeIn">    
+    
       <form onSubmit={handleSubmit} >
-        <Field name="id" component="input" type="hidden" label="id" />       
+        <Field name="id" component="input" type="hidden" label="id" />
+       
         <Field
-          name="name"
+          name="createdAt"
           component={InputField}
           type="text"
-          label="楼栋名称"
+          label="提交时间"
           readOnly={true}
-        />        
-   
-        <Field
-          name="hotline"
-          component={InputField}
-          placeholder="客服电话"         
-          label="客服电话"
-          readOnly={readOnly}
         />
-
-        {error && <strong>{error}</strong>}
-
-
+        <Field
+          name="contact"
+          component={InputField}
+          type="text"
+          label="业主"
+          readOnly={true}
+        />
+        <Field
+          name="phoneNr"
+          component={InputField}
+          type="text"
+          label="联系电话"
+          readOnly={true}
+        />
+        <Field
+          name="location"
+          component={InputField}
+          type="text"
+          label="地址"
+          readOnly={true}
+        />
+        <Field
+          name="content"
+          component={InputField}
+          label="事由"
+          type="textarea"        
+          readOnly={true}
+        />
+       <div>{imgs}</div>
         <Row className="align-items-center">
           <Col col='9' />
           <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
-            <Button block color="primary" type="submit" disabled={pristine || submitting}>提交</Button>
+            <Button block color="primary" type="submit" disabled={ submitting}>标记完成</Button>
           </Col>
           {/*  <Col col="1" sm="4" md="2" xl className="mb-3 mb-xl-0">
                 <Button block color="success" hidden={readOnly} disabled={pristine || submitting} onClick={reset}>重置</Button>
@@ -70,25 +87,25 @@ let EditHotlineForm = props => {
 
 
 // Decorate the form component
-EditHotlineForm = reduxForm({
-  form: 'hotline', // a unique name for this form
-  validate,                // redux-form同步验证 
-})(EditHotlineForm);
-//const selector = formValueSelector('hotline')
+EditTicketForm = reduxForm({
+  form: 'ticket', // a unique name for this form
+            // redux-form同步验证 
+})(EditTicketForm);
+//const selector = formValueSelector('ticket')
 const mapStateToProps = (state, ownProps) => {
- 
+
   if (state.cForm.data != undefined && state.cForm.data != null)
-    return { initialValues: { ...state.cForm.data }}
+    return { initialValues: { ...state.cForm.data } }
   else
-    return { initialValues: {}}
+    return { initialValues: {} }
 }
 
-EditHotlineForm = connect(
+EditTicketForm = connect(
   mapStateToProps
   // { load: loadAccount } // bind account loading action creator
-)(EditHotlineForm)
+)(EditTicketForm)
 
-export default EditHotlineForm;
+export default EditTicketForm;
 
 
 

@@ -12,9 +12,7 @@ const UploadFile = ({ input: {value: omitValue, ...inputProps }, meta: omitMeta,
   <input type='file' {...inputProps} {...props} />
 );
 const  validate = values => {
-  const errors = {}
-  console.log('---------------------------------')
-  console.log(values)
+  const errors = {} 
   if (!values.buildingId) {   
     errors.buildingId = '楼栋不能为空'
   }

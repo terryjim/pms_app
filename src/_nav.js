@@ -84,7 +84,7 @@ export default {
       name: '导入业主',
       url: '/inhabitant/importOwners',
       icon: 'icon-location-pin',
-    },{
+    }, {
       name: '导入门禁卡',
       url: '/inhabitant/importCards',
       icon: 'icon-location-pin',
@@ -96,14 +96,7 @@ export default {
         element: 'div',        // required valid HTML5 element tag
         attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
       },
-      //url:'/theme',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      }, */
-      // icon: 'icon-energy',
-      //class: '',             // optional class names space delimited list for title item ex: "text-center"
-    },
+    }, 
     {
       name: '公告列表',
       url: '/property/notice',
@@ -125,8 +118,8 @@ export default {
       //class: '',             // optional class names space delimited list for title item ex: "text-center"
     },
     {
-      name: '工单管理',
-      url: '/property/setting',
+      name: '物业报修',
+      url: '/property/ticket',
       icon: 'icon-settings',
     },
     {
@@ -134,6 +127,19 @@ export default {
       url: '/property/hotlines',
       icon: 'icon-location-pin',
     },
+    {
+      name: '物业卡管理',
+      url: '/property/CardManaged',
+      icon: 'icon-pie-chart',
+    },{
+      name: '门禁卡状态监控',
+      url: '/property/HardwareStatus',
+      icon: 'icon-pie-chart',
+    },
+
+
+    
+    
     {
       title: true,
       name: 'Theme',

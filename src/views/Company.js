@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
-import { clearEditedIds } from '../actions/common'
+import { clearEditedIds,clearCList,addToGrid } from '../actions/common'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditCompanyForm from '../forms/EditCompanyForm'
 import TopModal from '../components/TopModal'
@@ -24,13 +24,14 @@ class Company extends Component {
   }
 
   componentWillMount() {
+   
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
   componentWillReceiveProps(nextProps) {
     //确认删除记录操作    
-    if (nextProps.confirmDel) {     
-      this.props.dispatch(delList(this.state.selection, 'owner'))
+    if (nextProps.confirmDel) {
+      this.props.dispatch(delList(this.state.selection, 'company'))
     }
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditCompany: false })
@@ -97,8 +98,7 @@ class Company extends Component {
     });
   }
   submit = (values) => {
-    console.log(values)
-    return
+
     this.props.dispatch(saveForm(values, 'company'))
     //this.setState({ showEditCompany: false })
   }
@@ -129,11 +129,11 @@ class Company extends Component {
         }>
       </a>
     </div>)
-  }, {
+  },/*  {
     accessor: 'id',
     Header: 'id',
-    // show: false,
-  }, {
+    show: false,
+  }, */ {
     accessor: 'name',
     Header: '企业名称',
 
@@ -152,7 +152,7 @@ class Company extends Component {
   }, {
     accessor: 'owner',
     Header: '企业ＩＤ',
-
+    show: false,
   }, {
     id: 'location',
     Header: '房号',
@@ -184,7 +184,7 @@ class Company extends Component {
     let vOwners = this.props.vOwners
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCompany: true, edit: true }) }}>新增</Button>
+         <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCompany: true, edit: true }) }}>新增</Button>
         <Button color="danger" size="sm" onClick={() => {
           if (this.state.selection.length < 1)
             alert('请选择要删除的记录！')
@@ -220,10 +220,10 @@ class Company extends Component {
 
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
-                  return null
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditCompany: true, edit: false })
                 },
+                
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
                     this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
@@ -255,6 +255,7 @@ class Company extends Component {
 const mapStateToProps = (state) => {
   let vOwners = state.cList
   let success = state.success
+ 
   console.log(vOwners)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'company' && state.confirm.operate === 'del' ? state.confirm.confirm : false
