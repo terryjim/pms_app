@@ -88,9 +88,10 @@ class HardwareStatus extends Component {
   }, {
     id: 'status',
     Header: '在线状态', filterable: false,
-    accessor: d => d.status === 1 ? <Badge className="mr-1" color="danger">在线</Badge> : d.status === 2 ? <Badge className="mr-1" color="success">不在线</Badge> : <Badge className="mr-1" color="info">未知状态</Badge>,
-    sortMethod: (a, b) => {     
-      return a.length > b.length ? 1 : -1;
+    accessor: d => d.status === 1 ? <Badge value={d.status} className="mr-1" color="success">在线</Badge> : d.status === 2 ? <Badge className="mr-1" value={d.status} color="danger">不在线</Badge> : <Badge className="mr-1" value={0} color="info">未知状态</Badge>,
+    sortMethod: (a, b) => {
+     
+      return a.props.value > b.props.value ? 1 : -1;
     }
   },
 /*   {
@@ -146,7 +147,7 @@ class HardwareStatus extends Component {
 //获取building记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
   let hardwares = state.cList
-
+  console.log(hardwares)
   return { hardwares }
 }
 

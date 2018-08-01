@@ -124,7 +124,7 @@ class Ticket extends Component {
     width: 60,
     filterable: false,
     Cell: (c) => (<div>
-      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
+      <a className="fa fa-check" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
@@ -177,7 +177,7 @@ class Ticket extends Component {
   }, {
     accessor: 'images',
     Header: '附件',
-    show:false
+    show: false
   }, /*{
     //accessor: 'enabled',
     id:'enabled',
@@ -197,11 +197,23 @@ class Ticket extends Component {
       toggleAll,
       selectType: "checkbox",
     }
-    const Tickets = this.props.Tickets 
+    const Tickets = this.props.Tickets
     return (
       <div className="animated fadeIn">
+        <Button color="primary" size="sm" onClick={() => {
+          if (this.state.selection.length < 1)
+            alert('请选择要标记完成的记录！')
+          else
+            this.props.dispatch(showConfirm('是否已处理完成选中的记录？', 'ticket', 'finish'))
+        }}>标记完成</Button>
+        <Button color="danger" size="sm" onClick={() => {
+          if (this.state.selection.length < 1)
+            alert('请选择要删除的记录！')
+          else
+            this.props.dispatch(showConfirm('是否删除选中记录？', 'ticket', 'del'));
+        }}>删除</Button>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Tickets.content}
-          pages={Tickets.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
+          pages={Tickets.totalPages} columns={this.columns} defaultPageSize={5}/* defaultPageSize={window.TParams.defaultPageSize} */ filterable
           className="-striped -highlight"
 
           /* onPageChange={(pageIndex) => this.props.dispatch(getTicket({page:pageIndex,size:10}))}  */
@@ -210,17 +222,17 @@ class Ticket extends Component {
             let whereSql = []
             state.filtered.forEach(
               v => {
-                whereSql.push({'name':v.id,'value':v.value}) 
+                whereSql.push({ 'name': v.id, 'value': v.value })
               }
             )
-            let sort=[]
+            let sort = []
             state.sorted.forEach(
-              (v,index) => {               
-                sort.push({'name':v.id,'desc':v.desc})                
+              (v, index) => {
+                sort.push({ 'name': v.id, 'desc': v.desc })
               }
-          )
-         
-            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize,sort }, 'ticket'))
+            )
+
+            this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize, sort }, 'ticket'))
 
           }}
           getTrProps={

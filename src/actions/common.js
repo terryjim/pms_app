@@ -82,7 +82,6 @@ export const delList = (ids, module) => dispatch => {
     let delUrl = window.TParams.urls['del_' + module]
     if (delUrl == undefined || delUrl === '')
         delUrl = window.TParams.defaultUrl + module + '/del'
-
     ///////////////////////////////////////////////////////////////////
     //以下部分为测试用，后台API修改后删除些段
     /*   dispatch(showSuccess('删除成功！'))  //显示删除成功信息

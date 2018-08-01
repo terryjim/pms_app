@@ -56,7 +56,7 @@ class Owner extends Component {
   columns = [{
     accessor: 'id',
     Header: 'id',
-    // show: false,
+    show: false,
 
   }, {
     accessor: 'name',
