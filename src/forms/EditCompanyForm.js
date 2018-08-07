@@ -4,7 +4,7 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 
-import { InputField, InlineField } from '../components/field'
+import { InputField, InlineField,required,FieldValidate } from '../components/Field'
 import { getBuildingsByDepartment } from '../actions/building'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
@@ -12,7 +12,7 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 )
 
 const validate = values => {
-  const errors = {}
+  /* const errors = {}
   if (!values.name) {
     errors.name = '企业名称不能为空'
   }
@@ -25,13 +25,17 @@ const validate = values => {
   if (!values.owner&&!values.manager) {
     errors.manager = '管理员不能为空'
   }
+  //^\w+\-\w+\-\w(,\w+\-\w+\-\w)*$
+  if (!values.location&&!values.manager) {
+    errors.manager = '请正确输入房间号'
+  }
   if (!values.phone) {
     errors.phone = '手机号码不能为空'
   }
   if (!values.buildingId) {
     errors.buildingId = '楼栋号不能为空'
   }
-  return errors
+  return errors */
 }
 
 let EditCompanyForm = props => {
@@ -43,7 +47,6 @@ let EditCompanyForm = props => {
     props.dispatch(getBuildingsByDepartment())
   }
 
-
   return (
     <div className="animated fadeIn">
       <form onSubmit={handleSubmit} >
@@ -54,6 +57,7 @@ let EditCompanyForm = props => {
           component={InlineField}
           type="text"
           label="企业名称"
+          validate={[FieldValidate.minLength6,FieldValidate.required]}
           readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
        {/*  <Button color="primary" size="sm" onClick={() => { dispatch(fillFormByCompanyName(companyName)); this.setState({ showEditCompany: true, edit: true }) }}>查询</Button>
@@ -64,6 +68,7 @@ let EditCompanyForm = props => {
           placeholder="六位及以上英文（不区分大小写）和数字组成"
           type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
           label="企业空间名称"
+          validate={[FieldValidate.required,FieldValidate.minLength6]}
           readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
         <Container><FormGroup row>
@@ -85,13 +90,14 @@ let EditCompanyForm = props => {
           component={InputField}
           type="hidden"
           label=""
-          
+          validate={[FieldValidate.required]}
         />
         <Field
           name="location"
           component={InputField}
           type="text"
           placeholder="按单元号-楼层号-房号格式输入，多间房以逗号分隔，如1-12-1,1-12-2,1-12-3"
+          validate={[FieldValidate.required,FieldValidate.rooms]}
           label="房间号"          
         />
 
@@ -99,6 +105,7 @@ let EditCompanyForm = props => {
           name="manager"
           component={InputField}
           type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
+          validate={[FieldValidate.required]}
           label="管理员"
           
         />
@@ -107,6 +114,7 @@ let EditCompanyForm = props => {
           component={InputField}
           type="text"
           label="手机号码"
+          validate={[FieldValidate.required,FieldValidate.mobile]}
           readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
           <Field
@@ -115,16 +123,8 @@ let EditCompanyForm = props => {
           type="hidden"
           label="企业id"
         />
-        {/* 
-      <Field readOnly={readOnly}
-        name="enabled"
-        component={InputField}
-        type="text"
-        label="楼栋类型"
-      />*/}
+       
 
-
-        {error && <strong>{error}</strong>}
 
 
         <Row className="align-items-center">
@@ -153,7 +153,7 @@ let EditCompanyForm = props => {
 // Decorate the form component
 EditCompanyForm = reduxForm({
   form: 'company', // a unique name for this form
-  validate,                // redux-form同步验证 
+  //validate,                // redux-form同步验证 
 })(EditCompanyForm);
 //const selector = formValueSelector('company')
 const mapStateToProps = (state, ownProps) => {

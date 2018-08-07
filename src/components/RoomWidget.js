@@ -34,9 +34,9 @@ class RoomWidget extends Component {
       showEditOwner: false,//显示修改表单
     }
   }
-  componentDidMount() {    
+  componentDidMount() {
     let inhabitantList = this.props.inhabitantList
-    let { buildingId, unit, floor, room,projectId } =this.props   
+    let { buildingId, unit, floor, room, projectId } = this.props
     if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {
@@ -45,7 +45,7 @@ class RoomWidget extends Component {
   }
   componentWillReceiveProps(nextProps) {
     let inhabitantList = this.props.inhabitantList
-    let { buildingId, unit, floor, room,projectId } =nextProps
+    let { buildingId, unit, floor, room, projectId } = nextProps
     if (inhabitantList === undefined || inhabitantList.length === 0 || inhabitantList.findIndex(value => {
       return value.buildingId === buildingId && value.location.unit === unit && value.location.floor === floor && value.location.room === room
     }) < 0) {
@@ -66,7 +66,8 @@ class RoomWidget extends Component {
     ret.unit = this.props.unit
     ret.floor = this.props.floor
     ret.room = this.props.room
-    ret.id = this.state.id
+    if (this.props.owner != undefined)
+      ret.id = this.props.owner.id
     this.props.dispatch(bindRoom(ret))
     this.setState({ showEditOwner: false })
   }
@@ -111,7 +112,7 @@ class RoomWidget extends Component {
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditOwner()}>户主信息</ModalHeader>
           <ModalBody>
-            <EditOwnerForm onSubmit={this.submit} closeForm={this.toggleShowEditOwner} header={header} name={owner === undefined ? '' : owner.userName} phone={owner === undefined ? '' : owner.phone} />
+            <EditOwnerForm onSubmit={this.submit} closeForm={this.toggleShowEditOwner} header={header} id={owner === undefined ? '' : owner.id} name={owner === undefined ? '' : owner.userName} phone={owner === undefined ? '' : owner.phone} />
           </ModalBody>
         </TopModal>
       </div>
@@ -136,6 +137,7 @@ const mapStateToProps = (state, ownProps) => {
         let ownerIndex = inhabitants.findIndex(value => value.category === 1)
         if (ownerIndex >= 0) {
           owner = {}
+          owner.id = inhabitants[ownerIndex].ownerId
           owner.userName = inhabitants[ownerIndex].name
           owner.phone = inhabitants[ownerIndex].phone
         }

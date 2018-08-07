@@ -1,4 +1,4 @@
-import { loaded, loading, showError, checkStatus, showSuccess, addToGrid, addEditedIds, getListResult } from "./common";
+import { loaded, loading, showError, checkStatus, showSuccess, addToGrid,  getListResult } from "./common";
 
 //根据项目部ID获取楼栋列表
 export const getBuildingsByDepartment = (did = 0) => dispatch => {
@@ -64,7 +64,7 @@ export const setHotline = (values) => dispatch => {
                 dispatch(addToGrid(json.data))
                 //回传添加或修改后的记录id,用于页面标识修改痕迹
                 //alert(json.data.id)
-                dispatch(addEditedIds([json.data.id]))
+               // dispatch(addEditedIds([json.data.id]))
             }
         }).catch(e => {
             dispatch(loaded())

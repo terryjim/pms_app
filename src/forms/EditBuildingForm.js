@@ -6,7 +6,7 @@ import { showError } from '../actions/common'
 import { initRooms } from '../actions/building'
 import RoomWidget from '../components/RoomWidget'
 
-import { InputField, SelectField, InlineField, } from '../components/field'
+import { InputField, SelectField, InlineField, } from '../components/Field'
 
 
 class EditBuildingForm extends Component {

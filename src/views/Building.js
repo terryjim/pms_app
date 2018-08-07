@@ -143,7 +143,7 @@ class Building extends Component {
               </div>
               <div className="card-block"> */}
 
-        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
+        <TopModal style={{ "maxWidth": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditBuilding()}>住户分配信息</ModalHeader>
           <ModalBody>

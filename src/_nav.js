@@ -139,7 +139,7 @@ export default {
 
 
     
-    /*
+    /* 
     {
       title: true,
       name: 'Theme',
@@ -399,6 +399,6 @@ export default {
       icon: 'icon-layers',
       variant: 'danger',
     },
-*/
+ */
   ],
 };

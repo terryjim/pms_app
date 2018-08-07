@@ -4,7 +4,7 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 
-import { InputField, InlineField } from '../components/field'
+import { InputField, InlineField,FieldValidate } from '../components/Field'
 import { getBuildingsByDepartment } from '../actions/building'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
@@ -12,12 +12,12 @@ const simpleField = ({ readOnly, input, label, type, meta: { touched, error } })
 )
 
 const validate = values => {
-  const errors = {}
+ /*  const errors = {}
   
   if (!values.buildingId) {
     errors.buildingId = '楼栋号不能为空'
   }
-  return errors
+  return errors */
 }
 
 let EditHotlineForm = props => {
@@ -40,6 +40,7 @@ let EditHotlineForm = props => {
           component={InputField}
           placeholder="客服电话"         
           label="客服电话"
+          validate={[FieldValidate.required,FieldValidate.phone]}
           readOnly={readOnly}
         />
 
@@ -72,7 +73,7 @@ let EditHotlineForm = props => {
 // Decorate the form component
 EditHotlineForm = reduxForm({
   form: 'hotline', // a unique name for this form
-  validate,                // redux-form同步验证 
+  //validate,                // redux-form同步验证 
 })(EditHotlineForm);
 //const selector = formValueSelector('hotline')
 const mapStateToProps = (state, ownProps) => {

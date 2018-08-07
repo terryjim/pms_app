@@ -48,8 +48,7 @@ class Owner extends Component {
     });
   }
   submit = (values) => {
-    console.log(values)
-
+    
     this.props.dispatch(saveForm(values, 'building'))
     this.setState({ showEditBuilding: false })
   }
@@ -143,8 +142,7 @@ return null
                 <i className="fa fa-align-justify"></i> 管理员设置
               </div>
               <div className="card-block"> */}
-
-        <TopModal style={{ "max-width": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
+        <TopModal style={{ "maxWidth": "950px" }} isOpen={this.state.showEditBuilding} toggle={() => this.toggleShowEditBuilding()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditBuilding()}>楼栋信息</ModalHeader>
           <ModalBody>

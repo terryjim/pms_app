@@ -4,7 +4,7 @@ import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, Modal
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
 
-import { InputField, InlineField } from '../components/field'
+import { InputField, InlineField } from '../components/Field'
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />

@@ -64,7 +64,7 @@ class Forms extends Component {
                   </Col>
                 </Row>
                 <Row>
-                  <Col xs="4">
+                  <Col xs="2">
                     <FormGroup>
                       <Label htmlFor="ccmonth">Month</Label>
                       <Input type="select" name="ccmonth" id="ccmonth">
@@ -83,7 +83,7 @@ class Forms extends Component {
                       </Input>
                     </FormGroup>
                   </Col>
-                  <Col xs="4">
+                  <Col xs="6">
                     <FormGroup>
                       <Label htmlFor="ccyear">Year</Label>
                       <Input type="select" name="ccyear" id="ccyear">

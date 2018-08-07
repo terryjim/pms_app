@@ -7,7 +7,7 @@ import {uploadCards} from '../actions/owner'
 import { getBuildingsByDepartment } from '../actions/building'
 import RoomWidget from '../components/RoomWidget'
 
-import { InputField, SelectField, InlineField, } from '../components/field'
+import { InputField, SelectField, InlineField, } from '../components/Field'
 const UploadFile = ({ input: {value: omitValue, ...inputProps }, meta: omitMeta, ...props }) => (
   <input type='file' {...inputProps} {...props} />
 );

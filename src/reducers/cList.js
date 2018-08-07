@@ -43,7 +43,8 @@ let sample = {
     "size": 20,
     "sort": null,
     "first": true,
-    "numberOfElements": 2
+    "numberOfElements": 2,
+    editedIds: [],//添加或编辑的id列表
 }
 const cList = (state = {}, action) => {
     if (action.type === 'GET_LIST') {
@@ -62,7 +63,10 @@ const cList = (state = {}, action) => {
                 state.content.splice(index, 1, action.data);
             else
                 state.content.splice(0, 0, action.data);
-            //state.push(action.data)
+            if (state.editedIds === undefined)
+                state.editedIds = [action.data.id]
+            else
+                state.editedIds.push(action.data.id)           
             state = Object.assign({}, state)
 
         }

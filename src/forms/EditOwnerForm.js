@@ -3,26 +3,18 @@ import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import { ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField } from '../components/field'
+import { InputField,FieldValidate } from '../components/Field'
 
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
 )
 
-const validate = values => {
-  const errors = {}
-  if (!values.name) {
-    errors.name = '业主名称不能为空'
-  }
-  if (!values.phone) {
-    errors.phone = '手机号码不能为空'
-  }
-  return errors
-}
+
 
 let EditOwnerForm = props => {
-  const { name, phone, header,dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
+  const { id,name, phone, header,dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues } = props;
+  initialValues.id = id
   initialValues.name = name
   initialValues.phone = phone
   return (
@@ -35,6 +27,7 @@ let EditOwnerForm = props => {
           component={InputField}
           type="text"
           label="业主名称"
+          validate={[FieldValidate.required]}
         />
         <Field
           name="phone"
@@ -42,7 +35,16 @@ let EditOwnerForm = props => {
           type="text"
           label="手机号码"
           value={phone}
+          validate={[FieldValidate.required,FieldValidate.mobile]}
         />
+        <Label hidden={id===undefined||id===''}>
+          <Field
+          name="onlyUpdateOwner"
+          component={InputField}
+          type={id===undefined||id===''?'hidden':"checkbox"}
+          
+         />{' '}&nbsp;&nbsp;&nbsp;&nbsp;仅更新户主信息(若不选此项将同步删除原户主相关联的住户及门禁卡信息）</Label>
+
         {/* 
       <Field readOnly={readOnly}
         name="enabled"
@@ -81,7 +83,7 @@ let EditOwnerForm = props => {
 // Decorate the form component
 EditOwnerForm = reduxForm({
   form: 'owner', // a unique name for this form
-  validate,                // redux-form同步验证 
+  //validate,                // redux-form同步验证 
 })(EditOwnerForm);
 const mapStateToProps = (state) => {
 

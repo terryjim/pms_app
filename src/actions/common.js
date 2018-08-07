@@ -63,10 +63,10 @@ export const closeSuccess = () => ({
 })
 
 //修改或添加记录的ＩＤ列表，用于标识文档修改状态
-export const addEditedIds = (data) => ({
+/* export const addEditedIds = (data) => ({
     type: 'ADD_EDITED_IDS',
     ids: data
-})
+}) */
 export const clearEditedIds = () => ({
     type: 'CLEAR_EDITED_IDS'
 })
@@ -181,7 +181,7 @@ export const saveForm = (values, module) => dispatch => {
                 dispatch(addToGrid(json.data))
                 //回传添加或修改后的记录id,用于页面标识修改痕迹
                 //alert(json.data.id)
-                dispatch(addEditedIds([json.data.id]))
+             //   dispatch(addEditedIds([json.data.id]))
             }
         }).catch(e => {
             dispatch(loaded())

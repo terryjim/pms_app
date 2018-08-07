@@ -4,7 +4,7 @@ import { Field, reduxForm, change, FieldArray, formValueSelector } from 'redux-f
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField, InlineField } from '../components/field'
+import { InputField, InlineField } from '../components/Field'
 import { getBuildingsByDepartment } from '../actions/building'
 import Ueditor from '../components/Ueditor';
 
