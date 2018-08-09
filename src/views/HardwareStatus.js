@@ -131,7 +131,7 @@ class HardwareStatus extends Component {
     return (
       <div className="animated fadeIn">
         <div><Button color="primary" size="sm" onClick={() => { this.props.dispatch(checkHardwareStatus()) }}>查询在线状态</Button>
-          <div className="-next" style={{ 'color': 'red', 'textAlign': 'right' }}>在线状态统计：总数量-{total}&nbsp;&nbsp;&nbsp;&nbsp;不在线-{notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;在线-{onlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;未知状态-{total - onlineHardwares - notOnlineHardwares}</div></div>
+          <div className="-next" style={{ 'color': 'red', 'textAlign': 'right' }}>在线状态统计：总数量-{total}&nbsp;&nbsp;&nbsp;&nbsp;不在线-{notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;在线-{onlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;未知状态-{total - onlineHardwares - notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={hardwares.content} minRows={3}
           defaultPageSize={999}
           showPagination={false}

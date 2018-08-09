@@ -123,7 +123,7 @@ export default class MyPagination extends Component {
                                     </option>
                                 ))}
                             </select>
-                            {' 条   '}
+                            {' 条   '}共{total}条记录
                         </span>
                     )}
                     <Button disabled={!canNext} onClick={() => {
@@ -151,12 +151,15 @@ export default class MyPagination extends Component {
                     </PreviousComponent>
 
                 </div> */}
-                <div className="-center">
+                 <div className="-next">
+                    {otherInfo}
+                </div>
+               {/*  <div className="-center">
                     {otherInfo}
                 </div>
 
                 <div className="-next" style={{ 'text-align': 'right' }}>
-                    {/*       <i className="fa fa-play" />
+                          <i className="fa fa-play" />
                     <NextComponent
                         onClick={() => {
                             if (!canNext) return
@@ -166,10 +169,10 @@ export default class MyPagination extends Component {
                     >
                         {this.props.nextText}
                     </NextComponent>
-                    <i className="fa fa-step-forward" /> */}
+                    <i className="fa fa-step-forward" />
 
                     共{total}条记录&nbsp;&nbsp;
-                </div>
+                </div> */}
             </div >
         )
     }

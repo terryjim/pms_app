@@ -80,11 +80,11 @@ export class FieldValidate {
     ? '电话号码格式不对,请输入正确的座机号或手机号，座机号若带区号或分机号请以 - 分隔(如027-87558888-1234)'
     : undefined)
   //房号格式 1-1-1
-  static room = value => (value && !/^\w+\-\w$/i.test(value)
+  static room = value => (value && !/^\w+\-\w+\-\w+$/i.test(value)
     ? '房号格式不对'
     : undefined)
   //多间房号格式 1-1-1,1-1-2,2-1-1
-  static rooms = value => (value && !/^\w+\-\w+\-\w(,\w+\-\w+\-\w)*$/i.test(value)
+  static rooms = value => (value && !/^\w+\-\w+\-\w+(,\w+\-\w+\-\w+)*$/i.test(value)
     ? '房号格式不对'
     : undefined)
 }

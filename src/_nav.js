@@ -1,3 +1,4 @@
+import React from 'react'
 export default {
   items: [
     /*  {
@@ -12,48 +13,18 @@ export default {
   */
 
 
-    {
-      title: true,
-      name: '楼栋户主信息管理',
-      wrapper: {            // optional wrapper object
-        element: 'div',        // required valid HTML5 element tag
-        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      //url: '/base',
-      // icon: 'icon-globe',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      class: '' ,  */           // optional class names space delimited list for title item ex: "text-center"
-      //class: 'h3' 
-    },
-    {
-      name: '户主分配管理',
-      url: '/info/buildings',
-      icon: 'icon-layers',
-    }
-    ,
 
     {
-      title: true,
-      name: '企业管理',
-      wrapper: {            // optional wrapper object
-        element: 'div',        // required valid HTML5 element tag
-        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      //url:'/theme',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      }, */
-      // icon: 'icon-energy',
-      //class: '',             // optional class names space delimited list for title item ex: "text-center"
-    },
-    {
-      name: '企业列表',
-      url: '/owner/companies',
-      icon: 'icon-settings',
+      name: <b style={{ fontSize: 15, color: "#8bc34a" }} onClick={(e) => {
+        e.preventDefault();
+        e.target.parentElement.parentElement.classList.toggle('open');
+      }}>企业管理</b>,
+      children: [
+        {
+          name: '企业列表',
+          url: '/owner/companies',
+          icon: 'icon-settings',
+        }]
     },
     /*  {
        name: '企业入驻',
@@ -61,85 +32,82 @@ export default {
        icon: 'icon-location-pin',
      }, */
     {
-      title: true,
-      name: '住宅管理',
-      wrapper: {            // optional wrapper object
-        element: 'div',        // required valid HTML5 element tag
-        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      name: <b style={{ fontSize: 15, color: "#8bc34a" }} onClick={(e) => {
+        e.preventDefault();
+        e.target.parentElement.parentElement.classList.toggle('open');
+      }}>住宅管理</b>,
+      children: [{
+        name: '户主分配管理',
+        url: '/info/buildings',
+        icon: 'icon-layers',
       },
-      //url:'/theme',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      }, */
-      // icon: 'icon-energy',
-      //class: '',             // optional class names space delimited list for title item ex: "text-center"
-    },
-    {
-      name: '业主列表',
-      url: '/inhabitant/owners',
-      icon: 'icon-settings',
-    },
-    {
-      name: '导入业主',
-      url: '/inhabitant/importOwners',
-      icon: 'icon-location-pin',
-    }, {
-      name: '导入门禁卡',
-      url: '/inhabitant/importCards',
-      icon: 'icon-location-pin',
-    },
-    {
-      title: true,
-      name: '公告管理',
-      wrapper: {            // optional wrapper object
-        element: 'div',        // required valid HTML5 element tag
-        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+      {
+        name: '业主列表',
+        url: '/inhabitant/owners',
+        icon: 'icon-settings',
       },
-    }, 
+      {
+        name: '导入业主',
+        url: '/inhabitant/importOwners',
+        icon: 'icon-location-pin',
+      }, {
+        name: '导入门禁卡',
+        url: '/inhabitant/importCards',
+        icon: 'icon-location-pin',
+      }, {
+        name: '门禁卡管理',
+        url: '/inhabitant/ownerCards',
+        icon: 'icon-location-pin',
+      }]
+    },
     {
-      name: '公告列表',
-      url: '/property/notice',
+      name: <b style={{ fontSize: 15, color: "#8bc34a" }} onClick={(e) => {
+        e.preventDefault();
+        e.target.parentElement.parentElement.classList.toggle('open');
+      }}>公告管理</b>,
       icon: 'icon-settings',
+      children: [
+        {
+          name: '公告列表',
+          url: '/property/notice',
+          icon: 'icon-settings',
+        }]
     },
     {
-      title: true,
-      name: '物业管家',
-      wrapper: {            // optional wrapper object
-        element: 'div',        // required valid HTML5 element tag
-        attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      },
-      //url:'/theme',
-      /* wrapper: {            // optional wrapper object
-        element: '',        // required valid HTML5 element tag
-        attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-      }, */
-      // icon: 'icon-energy',
-      //class: '',             // optional class names space delimited list for title item ex: "text-center"
-    },
-    {
-      name: '物业报修',
-      url: '/property/ticket',
+      name: <b style={{ fontSize: 15, color: "#8bc34a" }} onClick={(e) => {
+        e.preventDefault();
+        e.target.parentElement.parentElement.classList.toggle('open');
+      }}>物业管理</b>,
       icon: 'icon-settings',
-    },
-    {
-      name: '客服管理',
-      url: '/property/hotlines',
-      icon: 'icon-location-pin',
-    },
-    {
-      name: '物业卡管理',
-      url: '/property/CardManaged',
-      icon: 'icon-pie-chart',
-    },{
-      name: '门禁卡状态监控',
-      url: '/property/HardwareStatus',
-      icon: 'icon-pie-chart',
+      /*  wrapper: {            // optional wrapper object
+         element: 'div',        // required valid HTML5 element tag
+         attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
+       }, */
+      children: [
+        {
+          name: '物业报修',
+          url: '/property/ticket',
+          icon: 'icon-settings',
+        },
+        {
+          name: '客服管理',
+          url: '/property/hotlines',
+          icon: 'icon-location-pin',
+        },
+        {
+          name: '物业卡管理',
+          url: '/property/CardManaged',
+          icon: 'icon-pie-chart',
+        }, {
+          name: '门禁卡状态监控',
+          url: '/property/HardwareStatus',
+          icon: 'icon-pie-chart',
+        }]
     },
 
 
-    
-    /* 
+
+
     {
       title: true,
       name: 'Theme',
@@ -399,6 +367,6 @@ export default {
       icon: 'icon-layers',
       variant: 'danger',
     },
- */
+
   ],
 };

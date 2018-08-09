@@ -41,9 +41,7 @@ const validate = values => {
 let EditCompanyForm = props => {
   const { header, dispatch, error, handleSubmit, pristine, reset, submitting, closeForm, initialValues, buildingList } = props;
 
-  //let 
-  if (buildingList === undefined || buildingList.length === 0) {
-    console.log('-------------------------------------------------------------')
+  if (buildingList === undefined || buildingList.length === 0) {   
     props.dispatch(getBuildingsByDepartment())
   }
 
@@ -157,8 +155,7 @@ EditCompanyForm = reduxForm({
 })(EditCompanyForm);
 //const selector = formValueSelector('company')
 const mapStateToProps = (state, ownProps) => {
-  let buildingList = state.buildingList
-  console.log(JSON.stringify(state.cForm.data))
+  let buildingList = state.buildingList 
   //const companyName=selector(state,'name')
   if (state.cForm.data != undefined && state.cForm.data != null)
     return { initialValues: { ...state.cForm.data }, buildingList }

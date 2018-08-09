@@ -42,6 +42,10 @@ const CardManaged= Loadable({
   loader: () => import('./views/CardManaged'),
   loading: Loading,
 })
+const OwnerCards= Loadable({
+  loader: () => import('./views/OwnerCard'),
+  loading: Loading,
+})
 const HardwareStatus=Loadable({
   loader: () => import('./views/HardwareStatus'),
   loading: Loading,
@@ -223,6 +227,7 @@ const routes = [
   { path: '/info/buildings', name: '楼栋管理', component: Buildings },
   { path: '/inhabitant/importOwners', name: '导入业主', component: ImportOwners },
   { path: '/inhabitant/importCards', name: '导入门禁卡', component: ImportCards },
+  { path: '/inhabitant/ownerCards', name: '门禁卡管理', component:OwnerCards },
   { path: '/inhabitant/owners', name: '业主列表', component: Owners },
   { path: '/owner/companies', name: '企业列表', component: Companies },
   { path: '/property/hotlines', name: '客服管理', component: Hotlines },
@@ -230,9 +235,9 @@ const routes = [
   { path: '/property/ticket', name: '物业报修', component: Tickets },
   { path: '/property/CardManaged', name: '物业卡管理', component: CardManaged },
   { path: '/property/HardwareStatus', name: '门禁设备状态', component: HardwareStatus },
-  { path: '/theme', exact: true, name: '楼盘管理', component: Colors },
-  
-  { path: '/theme/typography', name: '楼栋管理', component: Buildings },
+  { path: '/theme', exact: true, name: 'Theme', component: Colors },
+  { path: '/theme/colors', name: 'Colors', component: Colors },
+  { path: '/theme/typography', name: 'Typography', component: Typography },
   { path: '/base', exact: true, name: 'Base', component: Cards },
   { path: '/base/cards', name: 'Cards', component: Cards },
   { path: '/base/forms', name: 'Forms', component: Forms },
