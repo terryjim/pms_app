@@ -8,33 +8,24 @@ import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-
+import MyPagination from '../components/MyPagination'
 
 const CheckboxTable = checkboxHOC(ReactTable);
 
 class Building extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       showEditBuilding: false,//显示修改表单
       showDanger: false,   //显示错误信息
-
       edit: false,//是否为编辑状态
       selectAll: false,
+      loading: true
     };
   }
-
-  componentWillMount() {
-    //每次打开时清除页面修改痕迹
-    this.props.dispatch(clearEditedIds())
+  componentWillReceiveProps(nextProps) {
+    this.setState({ loading: false })
   }
-
-
-  componentDidMount() {    
-   
-    }
- 
 
   //切换编辑窗口状态（开、闭）
   toggleShowEditBuilding = () => {
@@ -42,28 +33,32 @@ class Building extends Component {
       showEditBuilding: !this.state.showEditBuilding,
     });
   }
-
   //切换错误窗口状态（开、闭）  
   toggleShowDanger = () => {
     this.setState({
       showDanger: !this.state.showDanger,
     });
   }
-/*   submit = (values) => {
-    console.log(values)
-
-    this.props.dispatch(saveForm(values, 'building'))
-    this.setState({ showEditBuilding: false })
-  } */
+  /*   submit = (values) => {
+      console.log(values)
+  
+      this.props.dispatch(saveForm(values, 'building'))
+      this.setState({ showEditBuilding: false })
+    } */
   columns = [{
     accessor: 'id',
     Header: 'id',
     show: false,
-
+  }, {
+    id: 'index',
+    Header: '序号',
+    filterable: false,
+    width: 60,
+    Cell: props => (props.page * props.pageSize + props.viewIndex + 1),
+    sortable: false
   }, {
     accessor: 'projectName',
     Header: '楼盘名称', show: false,
-   
   }, {
     accessor: 'projectId',
     Header: '楼盘ID',
@@ -71,27 +66,38 @@ class Building extends Component {
   }, {
     accessor: 'name',
     Header: '楼栋名称',
-
+    width: 300
   }, {
-    id: 'category',
-    accessor: d => d.category == 1 ? '社区' : d.category == 2 ? '商办' : d.category == 3 ? '社区与商办' : '',
+    accessor: 'category',
+    Cell: ({ value }) => value == 1 ? '社区' : value == 2 ? '商办' : value == 3 ? '社区与商办' : '',
     Header: '楼栋类型',
+    width: 160,
+    Filter: ({ filter, onChange }) =>
+      <select
+        onChange={event => onChange(event.target.value)}
+        value={filter ? filter.value : ''}
+      >
+        <option value={1}>社区</option>
+        <option value={2}>商办</option>
+        <option value={3}>社区与商办</option>
+        <option value={''}>不限</option>
+      </select>,
   }, {
-    accessor: 'remark',
-    Header: '备注',
-  }, {
-    id: 'unit',
-    accessor: d => {     
-      if (d.structure != undefined )      
+    id: 'units',
+    accessor: d => {
+      if (d.structure != undefined)
         return d.structure.length
     },
-    Header: '单元数',filterable: false,
+    Header: '单元数', width: 120
   }, {
     id: 'floors',
     accessor: d => {
-      if (d.structure != undefined && d.structure[0] != undefined&& d.structure[0].floors != undefined)
+      if (d.structure != undefined && d.structure[0] != undefined && d.structure[0].floors != undefined)
         return d.structure[0].floors.length
-    }, Header: '楼层数',filterable: false,
+    }, Header: '楼层数', width: 120
+  }, {
+    accessor: 'remark',
+    Header: '备注',
   }
   ];
 
@@ -99,16 +105,52 @@ class Building extends Component {
 
     let buildings = this.props.buildings
     return (
-      <div className="animated fadeIn">   
+      <div className="animated fadeIn">
         <ReactTable keyField='id' data={buildings.content}
           pages={buildings.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
           className="-striped -highlight"
           /* onPageChange={(pageIndex) => this.props.dispatch(getBuilding({page:pageIndex,size:10}))}  */
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          total={buildings.totalElements}
+          PaginationComponent={MyPagination}
+          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          loading={this.state.loading}
+          style={{
+            height: document.body.clientHeight - 180 // This will force the table body to overflow and scroll, since there is not enough room
+            , backgroundColor: '#FFFFFF'
+          }}
+          getTheadProps={() => {
+            return {
+              style: {
+                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
+              }
+            };
+          }}
+          getTheadThProps={() => {
+            return {
+              style: {
+                marginTop: '5px'
+              }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+              style: {
+                textAlign: "center"
+              }
+            };
+          }}
           onFetchData={(state, instance) => {
             let whereSql = ''
             state.filtered.forEach(
-              v => whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
+              v => {
+                if (v.id === 'units')
+                  whereSql += ' and  json_length(structure)=' + v.value
+                else if (v.id === 'floors')
+                  whereSql += " and  json_length(JSON_EXTRACT(structure,'$[0].floors'))=" + v.value
+                else
+                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+              }
             )
 
             this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'building'))
@@ -119,10 +161,10 @@ class Building extends Component {
               if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
                 style.background = '#c8e6c9';
               }
-           
+
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
-                 
+
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditBuilding: true, edit: false })
                 },
@@ -132,7 +174,7 @@ class Building extends Component {
               }
             }
           }
-         
+
         />
         {/*  <div className="row">
 

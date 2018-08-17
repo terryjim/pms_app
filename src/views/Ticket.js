@@ -149,11 +149,11 @@ class Ticket extends Component {
     Filter: ({ filter, onChange }) =>
       <select
         onChange={event => onChange(event.target.value)}
-        value={filter ? filter.value : "all"}
+        value={filter ? filter.value : ''}
       >
         <option value={0}>未处理</option>
         <option value={1}>已处理</option>
-        <option value="all">全部</option>
+        <option value=''>全部</option>
       </select>,
   }, {
     id: 'ticketEvent',

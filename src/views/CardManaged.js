@@ -12,6 +12,17 @@ import 'react-table/react-table.css'
 import MyPagination from '../components/MyPagination'
 const CheckboxTable = checkboxHOC(ReactTable);
 class CardManaged extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showEditCard: false,//显示修改表单
+      showDanger: false,   //显示错误信息
+      selection: [],
+      edit: false,//是否为编辑状态
+      selectAll: false,
+      loading: true,
+    };
+  }
   componentWillMount() {
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
@@ -33,17 +44,7 @@ class CardManaged extends Component {
   componentWillUnmount() {
 
   }
-  constructor(props) {
-    super(props);
-    this.state = {
-      showEditCard: false,//显示修改表单
-      showDanger: false,   //显示错误信息
-      selection: [],
-      edit: false,//是否为编辑状态
-      selectAll: false,
-      loading: true,
-    };
-  }
+  
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -225,14 +226,7 @@ class CardManaged extends Component {
         </div>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Cards.content}
           pages={Cards.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
-          className="-striped -highlight"
-          getTdProps={(state, rowInfo, column) => {
-            return {
-              style: {
-                textAlign: "center"
-              }
-            };
-          }}
+          className="-striped -highlight"         
           total={Cards.totalElements}
           PaginationComponent={MyPagination}
           /* onPageChange={(pageIndex) => this.props.dispatch(getCard({page:pageIndex,size:10}))}  */
@@ -253,6 +247,13 @@ class CardManaged extends Component {
             return {
               style: {
                 marginTop: '5px'
+              }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+              style: {
+                textAlign: "center"
               }
             };
           }}

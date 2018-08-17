@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
-import { clearEditedIds,clearCList,addToGrid } from '../actions/common'
+import { clearEditedIds, clearCList, addToGrid } from '../actions/common'
 import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditCompanyForm from '../forms/EditCompanyForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-
+import MyPagination from '../components/MyPagination'
 const CheckboxTable = checkboxHOC(ReactTable);
 //企业列表
 class Company extends Component {
@@ -20,15 +20,17 @@ class Company extends Component {
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
+      loading: true,
     };
   }
 
   componentWillMount() {
-   
+
     //每次打开时清除页面修改痕迹
     this.props.dispatch(clearEditedIds())
   }
   componentWillReceiveProps(nextProps) {
+    this.setState({ loading: false })
     //确认删除记录操作    
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'company'))
@@ -103,44 +105,51 @@ class Company extends Component {
     //this.setState({ showEditCompany: false })
   }
   columns = [{
+    accessor: 'id',
+    Header: 'id',
+    show: false,
+  }, {
+    id: 'index',
+    Header: '序号',
+    filterable: false,
+    width: 60,
+    Cell: props => (props.page * props.pageSize + props.viewIndex + 1),
+    sortable: false
+  }, {
     Header: '',
     sortable: false,
     width: 60,
     filterable: false,
-    Cell: (c) => (<div>
-      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
+    Cell: (props) => (<div>
+      <a className="fa fa-pencil" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
-            this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
-            this.setState({ selection: [c.row.id] })
+            this.setState({ selection: [props.row.id] })
+            this.props.dispatch(fillForm(props.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditCompany: true, edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
+     <a className="fa fa-remove" style={{ fontSize: 15, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
+            this.setState({ selection: [props.row.id] })
             this.props.dispatch(showConfirm('是否删除选中记录？', 'company', 'del'))
           }
         }>
       </a>
     </div>)
-  },/*  {
-    accessor: 'id',
-    Header: 'id',
-    show: false,
-  }, */ {
+  }, {
     accessor: 'name',
     Header: '企业名称',
-
+    width: 400
   }, {
     accessor: 'phone',
     Header: '联系电话',
-
+    width: 120
   }, {
     accessor: 'buildingId',
     Header: '楼栋ID',
@@ -148,7 +157,7 @@ class Company extends Component {
   }, {
     accessor: 'buildingName',
     Header: '所在楼栋',
-
+    width: 180
   }, {
     accessor: 'owner',
     Header: '企业ＩＤ',
@@ -156,8 +165,6 @@ class Company extends Component {
   }, {
     id: 'location',
     Header: '房号',
-    //width: 60,
-    filterable: false,
     accessor: d => {
       try {
         let location = ''
@@ -183,29 +190,84 @@ class Company extends Component {
     }
     let vOwners = this.props.vOwners
     return (
-      <div className="animated fadeIn">
-         <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCompany: true, edit: true }) }}>新增</Button>
-        <Button color="danger" size="sm" onClick={() => {
-          if (this.state.selection.length < 1)
-            alert('请选择要删除的记录！')
-          else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'company', 'del'));
-        }}>删除</Button>
+      <div className="animated fadeIn" style={{ marginTop: '-15px' }}>
+        <div style={{ marginBottom: '8px' }}>
+          <Button color="success" size="sm"
+            onClick={() => {
+              this.props.dispatch(fillForm(null))
+              this.setState({ showEditCompany: true, edit: true })
+            }
+            }>
+            <i className="fa fa-file-o"></i>&nbsp;新增
+    </Button>
+          {' '}
+          <Button color="danger"
+            size="sm"
+            onClick={() => {
+              if (this.state.selection.length < 1)
+                alert('请选择要删除的记录！')
+              else
+                this.props.dispatch(showConfirm('是否删除选中的' + this.state.selection.length + '条记录？', 'company', 'del'));
+            }}>
+            <i className="fa fa-remove" ></i>&nbsp;删除
+      </Button>
+        </div>
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={vOwners.content}
           pages={vOwners.totalPages} columns={this.columns} defaultPageSize={window.TParams.defaultPageSize} filterable
           className="-striped -highlight"
+          total={vOwners.totalElements}
+          PaginationComponent={MyPagination}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          loading={this.state.loading}
+          style={{
+            height: document.body.clientHeight - 210 // This will force the table body to overflow and scroll, since there is not enough room
+            , backgroundColor: '#FFFFFF'
+          }}
+          getTheadProps={() => {
+            return {
+              style: {
+                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
+              }
+            };
+          }}
+          getTheadThProps={() => {
+            return {
+              style: {
+                marginTop: '5px'
+              }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+              style: {
+                textAlign: "center"
+              }
+            };
+          }}
+
+
           onFetchData={(state, instance) => {
             let whereSql = ' and category=2'
             state.filtered.forEach(
-              v => whereSql = whereSql + ' and ' + v.id + ' like \'%' + v.value + '%\''
+              v => {
+                if (v.id === 'location') {
+                  let locations = v.value.split(',')
+                  locations.map(loc => {
+                    let location = loc.split('-')
+                    location.length === 1 ? location = { "unit": location[0] } : location.length === 2 ? location = { "unit": location[0], "floor": location[1] } : location.length === 3 ? location = { "unit": location[0], "floor": location[1], "room": location[2] } : ''
+                    whereSql += ' and json_contains(location,\'' + JSON.stringify(location) + '\')>0'
+                  })
+                }
+                else
+                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+              }
             )
             state.sorted.forEach(
               (v, index) => {
-                if (index === 0)
-                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
+                if (v.id === 'name')
+                  whereSql += ' order by byGBK(name)' + (v.desc ? " desc" : " asc")
                 else
-                  whereSql += ' and ' + v.id + (v.desc ? " desc" : " asc")
+                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
               }
             )
 
@@ -214,25 +276,34 @@ class Company extends Component {
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
-              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
-                style.background = '#c8e6c9';
+              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
+                style.background = '#4DBD74'
+                style.color = '#FFFFFF'
               }
-
+              else
+                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                  style.background = '#F86C6B'
+                  style.color = '#FFFFFF'
+                } else
+                  style = {}
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
                   this.setState({ showEditCompany: true, edit: false })
                 },
-                
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    if (this.state.selection.includes(rowInfo.row.id))
+                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.id) })
+                    else
+                      this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })
                     else
                       this.setState({ selection: [rowInfo.row.id] })
                   }
+
                 }
               }
             }
@@ -255,7 +326,7 @@ class Company extends Component {
 const mapStateToProps = (state) => {
   let vOwners = state.cList
   let success = state.success
- 
+
   console.log(vOwners)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'company' && state.confirm.operate === 'del' ? state.confirm.confirm : false
