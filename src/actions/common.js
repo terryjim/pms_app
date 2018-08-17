@@ -3,11 +3,12 @@ export const checkStatus = response => {
     if (response.status >= 200 && response.status < 300) {
         return response;
     }
-    if (response.status === 401)
-        throw (new Error("对不起，您没有权限访问此资源！"))
-    else {        
+    if (response.status === 401) {
+        throw (new Error("对不起，您没有权限访问此资源，请重新登录！"))
+    }
+    else {
         const error = new Error(response.statusText);
-        error.response = response;       
+        error.response = response;
         throw error
     }
 }
@@ -92,10 +93,10 @@ return */
 
     return fetch(delUrl, args).then(response => response.json())
         .then(json => {
-            console.log(json)
-            console.log(json.data)
+            // console.log(json)
+            //  console.log(json.data)
             if (json.code !== 0) {
-                console.log(json.msg)
+                // console.log(json.msg)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
@@ -129,12 +130,12 @@ export const getList = ({ whereSql, page, size, sort }, module) => dispatch => {
         getUrl = window.TParams.defaultUrl + module + '/getByPage'
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
         .then(json => {
-            console.log(json)
+
             if (json.code !== 0)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             else
                 return dispatch(getListResult(json.data))
-        }).catch(e => {           
+        }).catch(e => {
             if (e != undefined)
                 return dispatch(showError(e.message))
             else
@@ -149,8 +150,8 @@ export const getListResult = (json) => (
         data: json
     }
 )
-export const clearCList=()=>(
-    {type:'CLEAR_LIST'}
+export const clearCList = () => (
+    { type: 'CLEAR_LIST' }
 )
 //保存表单
 export const saveForm = (values, module) => dispatch => {
@@ -158,21 +159,18 @@ export const saveForm = (values, module) => dispatch => {
     /*let headers = { 'Content-Type': 'application/x-www-form-urlencoded' };*/
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken
-    console.log(values)
+
     let body = JSON.stringify(values)
     //let body = values
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     let saveUrl = window.TParams.urls['save_' + module]
     if (saveUrl == undefined || saveUrl === '')
-        saveUrl = window.TParams.defaultUrl + module + '/save'    
+        saveUrl = window.TParams.defaultUrl + module + '/save'
     dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {
             dispatch(loaded())
-            console.log(json)
-            console.log(json.data)
             if (json.code !== 0) {
-                console.log(json.msg)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             }
             else {
@@ -181,7 +179,7 @@ export const saveForm = (values, module) => dispatch => {
                 dispatch(addToGrid(json.data))
                 //回传添加或修改后的记录id,用于页面标识修改痕迹
                 //alert(json.data.id)
-             //   dispatch(addEditedIds([json.data.id]))
+                //   dispatch(addEditedIds([json.data.id]))
             }
         }).catch(e => {
             dispatch(loaded())

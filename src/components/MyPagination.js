@@ -13,8 +13,7 @@ const defaultButton = props => (
 //自定义react-table 分布栏（加总条数）
 export default class MyPagination extends Component {
     constructor(props) {
-        super()
-        console.log(props)
+        super()     
         this.getSafePage = this.getSafePage.bind(this)
         this.changePage = this.changePage.bind(this)
         this.applyPage = this.applyPage.bind(this)
@@ -72,7 +71,7 @@ export default class MyPagination extends Component {
     } = this.props
 
         return (
-            <div className={classnames(className, '-pagination')} style={{ 'align-items': 'center', ...this.props.style }}>
+            <div className={classnames(className, '-pagination')} style={{ 'alignItems': 'center', ...this.props.style }}>
 
                 <div >
                     <Button disabled={!canPrevious} onClick={() => {

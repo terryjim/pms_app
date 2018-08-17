@@ -17,21 +17,15 @@ class OwnerCard extends Component {
     this.props.dispatch(clearEditedIds())
   }
   componentWillReceiveProps(nextProps) {
+    this.setState({ loading: false })
     //确认删除记录操作    
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'card'))
-    }
-    //标记完成操作    
-    if (nextProps.confirmFinish) {
-      this.props.dispatch(markCompleted(this.state.selection))
-    }
+    }   
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditCard: false })
   }
 
-  componentWillUnmount() {
-
-  }
   constructor(props) {
     super(props);
     this.state = {
@@ -40,9 +34,11 @@ class OwnerCard extends Component {
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
-
-    };
+      loading: true
+    }
   }
+ 
+
   toggleSelection = (key, shift, row) => {
     /* 
       Implementation of how to manage the selection state is up to the developer.
@@ -112,10 +108,11 @@ class OwnerCard extends Component {
   }
 
   submit = (values) => {
-    let values2=Object.assign({},values)    //不要修改原values对象以防止提交出错时修改了原表单数据
-    let location=values2.location.split('-')
-    location=[].concat({unit:location[0],floor:location[1],room:location[2]})
-    values2.location=location   
+    let values2 = Object.assign({}, values)    //不要修改原values对象以防止提交出错时修改了原表单数据
+
+    let location = values2.location.split('-')
+    location = [].concat({ unit: location[0], floor: location[1], room: location[2] })
+    values2.location = location
     this.props.dispatch(saveForm(values2, 'vOwnerCard'))
   }
   columns = [{
@@ -124,6 +121,13 @@ class OwnerCard extends Component {
     show: false,
 
   }, {
+    id: 'index',
+    Header: '序号',
+    filterable: false,
+    width: 60,
+    Cell: props => (props.page * props.pageSize + props.viewIndex + 1),
+    sortable: false
+  }, {
     accessor: 'buildingId',
     Header: 'buildingId',
     show: false,
@@ -131,25 +135,25 @@ class OwnerCard extends Component {
   }, {
     Header: '',
     sortable: false,
-    width: 60,
+    width: 60, resizable: false,
     filterable: false,
-    Cell: (c) => (<div>
-      <a className="fa fa-edit" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
+    Cell: (props) => (<div>
+      <a className="fa fa-pencil" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
-            this.props.dispatch(fillForm(c.row))　　/* 获取当前行信息填充到编辑表单 */
+            this.setState({ selection: [props.row.id] })
+            this.props.dispatch(fillForm(props.row))　　/* 获取当前行信息填充到编辑表单 */
             this.setState({ showEditCard: true, edit: true })
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
+     <a className="fa fa-remove" style={{ fontSize: 15, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
+            this.setState({ selection: [props.row.id] })
             this.props.dispatch(showConfirm('是否删除选中记录？', 'card', 'del'))
           }
         }>
@@ -158,47 +162,45 @@ class OwnerCard extends Component {
   }, {
     accessor: 'title',
     Header: '卡名称',
-    width: 120,
+
     //accessor: d => (d.processState === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>)
-  },{
+  }, {
     accessor: 'code',
     Header: '卡号',
-    width: 180,
+
   }, {
     accessor: 'buildingName',
     Header: '所属楼栋',
-    width: 120,
+
     //accessor: d => (d.processState === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>)
   }, {
     id: 'location',
     Header: '房号',
-    width:120,
-    //filterable:false,
     accessor: d => {
       try {
         let location = d.location[0]
-        console.log(location)
         return `${location.unit}-${location.floor}-${location.room}`
       } catch (e) { return '' }
     },
 
-  },  {
+  }, {
     accessor: 'name',
     Header: '业主',
-    width: 120,
     //accessor: d => (d.processState === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>)
-  },  {
+  }, {
     accessor: 'phone',
     Header: '电话',
-    width: 120,
     //accessor: d => (d.processState === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>)
-  },{
+  }, {
     accessor: 'startTime',
     Header: '授权开始时间',
-    width: 180,
+    Filter: ({ filter, onChange }) =>
+      <Input type="date" onChange={event => onChange(event.target.value)} value={filter ? filter.value : ''} />
   }, {
     accessor: 'endTime',
     Header: '授权结束时间',
+    Filter: ({ filter, onChange }) =>
+      <Input type="date" onChange={event => onChange(event.target.value)} value={filter ? filter.value : ''} />
 
   },  /*{
     //accessor: 'enabled',
@@ -221,15 +223,29 @@ class OwnerCard extends Component {
     }
     const cards = this.props.cards
     return (
-      <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => { this.props.dispatch(fillForm(null)); this.setState({ showEditCard: true, edit: true }) }}>新增</Button>
-        <Button color="danger" size="sm" onClick={() => {
-          if (this.state.selection.length < 1)
-            alert('请选择要删除的记录！')
-          else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'card', 'del'));
-        }}>删除</Button>
-         <CheckboxTable ref={r => (this.checkboxTable = r)}
+      <div className="animated fadeIn border-primary" style={{ marginTop: '-15px' }}>
+        <div style={{ marginBottom: '8px' }}>
+          <Button color="success" size="sm"
+            onClick={() => {
+              this.props.dispatch(fillForm(null))
+              this.setState({ showEditCard: true, edit: true })
+            }
+            }>
+            <i className="fa fa-file-o"></i>&nbsp;新增
+        </Button>
+          {' '}
+          <Button color="danger"
+            size="sm"
+            onClick={() => {
+              if (this.state.selection.length < 1)
+                alert('请选择要删除的记录！')
+              else
+                this.props.dispatch(showConfirm('是否删除选中的' + this.state.selection.length + '条记录？', 'card', 'del'));
+            }}>
+            <i className="fa fa-remove" ></i>&nbsp;删除
+          </Button>
+        </div>
+        <CheckboxTable ref={r => (this.checkboxTable = r)}
           keyField='id'
           className="-striped -highlight"
           data={cards.content}
@@ -241,36 +257,86 @@ class OwnerCard extends Component {
           PaginationComponent={MyPagination}
           loading={this.state.loading}
           style={{
-            height: document.body.clientHeight - 220 // This will force the table body to overflow and scroll, since there is not enough room
+            height: document.body.clientHeight - 210 // This will force the table body to overflow and scroll, since there is not enough room
+            , backgroundColor: '#FFFFFF'
+          }}
+
+          getTheadProps={() => {
+            return {
+              style: {
+                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
+              }
+            };
+          }}
+          /*   getTheadTrProps={() => {
+              return {
+                style: {
+                  height: '40px', backgroundColor:'red', marginBottom: '5px'
+                }
+              };
+            }} */
+          getTheadThProps={() => {
+            return {
+              style: {
+                marginTop: '5px'
+              }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            /*  if (column.id === 'index')
+               return {
+                 style: {
+                   backgroundColor: '#4DBD74', textAlign: "center"
+                 }
+               };
+             else */
+            return {
+              style: {
+                textAlign: "center"
+              }
+            };
           }}
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
           onFetchData={(state, instance) => {
             let whereSql = ' and isManage=0'
             state.filtered.forEach(
               v => {
-                if (v.id === 'location')
-                  whereSql += ' and json_search(location,\'one\',\'%'+v.value + '%\')>0'
+                if (v.id === 'location') {
+                  let location = v.value.split('-')
+                  location.length === 1 ? location = { "unit": location[0] } : location.length === 2 ? location = { "unit": location[0], "floor": location[1] } : location.length === 3 ? location = { "unit": location[0], "floor": location[1], "room": location[2] } : ''
+                  whereSql += ' and json_contains(location,\'' + JSON.stringify(location) + '\')>0'
+                }
+                else if (v.id === 'startTime')
+                  whereSql += ' and startTime>=\'' + v.value + '\''
+                else if (v.id === 'endTime')
+                  whereSql += ' and endTime<=\'' + v.value + '\''
                 else
-                whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+                  whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
             )
             state.sorted.forEach(
               (v, index) => {
-                if (index === 0)
-                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
+                if (v.id === 'title' || v.id === 'name')
+                  whereSql += ' order by byGBK(' + v.id + ')' + (v.desc ? " desc" : " asc")
                 else
-                  whereSql += ' and ' + v.id + (v.desc ? " desc" : " asc")
+                  whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
               }
             )
             this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize }, 'vOwnerCard'))
-
           }}
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
-              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
-                style.background = '#c8e6c9';
+              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
+                style.background = '#4DBD74'
+                style.color = '#FFFFFF'
               }
+              else
+                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                  style.background = '#F86C6B'
+                  style.color = '#FFFFFF'
+                } else
+                  style = {}
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
@@ -278,13 +344,17 @@ class OwnerCard extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    if (this.state.selection.includes(rowInfo.row.id))
+                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.id) })
+                    else
+                      this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })
                     else
                       this.setState({ selection: [rowInfo.row.id] })
                   }
+
                 }
               }
             }
@@ -292,9 +362,9 @@ class OwnerCard extends Component {
           {...checkboxProps}
         />
 
-        <TopModal isOpen={this.state.showEditCard} toggle={() => this.toggleShowEditCard()}
+        <TopModal style={{ "maxWidth": "750px" }} isOpen={this.state.showEditCard} toggle={() => this.toggleShowEditCard()}
           className={'modal-primary ' + this.props.className}>
-          <ModalHeader toggle={() => this.toggleShowEditCard()}>物业卡管理</ModalHeader>
+          <ModalHeader toggle={() => this.toggleShowEditCard()}>门禁卡管理</ModalHeader>
           <ModalBody>
             <EditOwnerCardForm readOnly={!this.state.edit} onSubmit={this.submit} closeForm={this.toggleShowEditCard} />
           </ModalBody>

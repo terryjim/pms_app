@@ -1,4 +1,5 @@
 import React from 'react'
+
 export default {
   items: [
     /*  {
@@ -19,11 +20,12 @@ export default {
         e.preventDefault();
         e.target.parentElement.parentElement.classList.toggle('open');
       }}>企业管理</b>,
+      icon: 'icon-puzzle',
       children: [
         {
-          name: '企业列表',
+          name: '　企业列表',
           url: '/owner/companies',
-          icon: 'icon-settings',
+          icon: ["icon-puzzle","right-padding"],
         }]
     },
     /*  {
@@ -36,28 +38,29 @@ export default {
         e.preventDefault();
         e.target.parentElement.parentElement.classList.toggle('open');
       }}>住宅管理</b>,
+      icon:'icon-layers',
       children: [{
-        name: '户主分配管理',
+        name: '　户主分配管理',
         url: '/info/buildings',
-        icon: 'icon-layers',
+        icon:["icon-layers","right-padding"],
       },
       {
-        name: '业主列表',
+        name: '　住户列表',
         url: '/inhabitant/owners',
-        icon: 'icon-settings',
+        icon:["icon-layers","right-padding"],
       },
       {
-        name: '导入业主',
+        name: '　导入业主',
         url: '/inhabitant/importOwners',
-        icon: 'icon-location-pin',
+        icon:["icon-layers","right-padding"],
       }, {
-        name: '导入门禁卡',
+        name: '　导入门禁卡',
         url: '/inhabitant/importCards',
-        icon: 'icon-location-pin',
+        icon:["icon-layers","right-padding"],
       }, {
-        name: '门禁卡管理',
+        name: '　门禁卡管理',
         url: '/inhabitant/ownerCards',
-        icon: 'icon-location-pin',
+        icon:["icon-layers","right-padding"],
       }]
     },
     {
@@ -65,12 +68,12 @@ export default {
         e.preventDefault();
         e.target.parentElement.parentElement.classList.toggle('open');
       }}>公告管理</b>,
-      icon: 'icon-settings',
+      icon: 'icon-pie-chart',
       children: [
         {
-          name: '公告列表',
+          name: '　公告列表',
           url: '/property/notice',
-          icon: 'icon-settings',
+          icon: ["icon-pie-chart","right-padding"],           
         }]
     },
     {
@@ -78,30 +81,30 @@ export default {
         e.preventDefault();
         e.target.parentElement.parentElement.classList.toggle('open');
       }}>物业管理</b>,
-      icon: 'icon-settings',
+      icon: 'icon-location-pin',
       /*  wrapper: {            // optional wrapper object
          element: 'div',        // required valid HTML5 element tag
          attributes: { style: { fontSize: 15, color: "#8bc34a" } }        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
        }, */
       children: [
         {
-          name: '物业报修',
+          name: '　物业报修',
           url: '/property/ticket',
-          icon: 'icon-settings',
+          icon: ["icon-location-pin","right-padding"],
         },
         {
-          name: '客服管理',
+          name: '　客服管理',
           url: '/property/hotlines',
-          icon: 'icon-location-pin',
+          icon: ["icon-location-pin","right-padding"],
         },
         {
-          name: '物业卡管理',
+          name: '　物业卡管理',
           url: '/property/CardManaged',
-          icon: 'icon-pie-chart',
+          icon: ["icon-location-pin","right-padding"],
         }, {
-          name: '门禁卡状态监控',
+          name: '　门禁卡状态监控',
           url: '/property/HardwareStatus',
-          icon: 'icon-pie-chart',
+          icon: ["icon-location-pin","right-padding"],
         }]
     },
 

@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  Badge, Button, ButtonDropdown, Card, CardBody, CardFooter, CardHeader, Col, Collapse, DropdownItem, DropdownMenu,
-  DropdownToggle, Form, FormGroup, FormText, FormFeedback, Input, InputGroup, InputGroupAddon, InputGroupText,
-  Label, Row, Container
+  Col, FormGroup, FormFeedback, Input, Label
 } from 'reactstrap';
 /* export const InputField = ({ readOnly, input, label, placeholder, type, meta: { touched, error } }) => (
   <Col xs="12">
@@ -13,7 +11,7 @@ import {
     </FormGroup>
   </Col> 
 ) */
-export const InlineField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
+/* export const InlineField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Container><FormGroup row>
     <Label sm={2} hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
     <Col sm={10}><Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
@@ -22,6 +20,54 @@ export const InlineField = ({ readOnly, input, label, type, meta: { touched, err
   </FormGroup>
 
   </Container>
+) */
+export const InlineField = ({ mdLabel = 2, mdContent = 12 - mdLabel, name, readOnly, input, label, placeholder = label, type, meta: { touched, error } }) => (
+  <FormGroup row>
+    <Col md={mdLabel}>
+      <Label
+        hidden={type === 'hidden' ? true : false || label === undefined || label === null}
+        htmlFor="{label}"
+        style={{ marginTop: '8px' }}
+      >
+        {label}
+      </Label>
+    </Col>
+    <Col xs="12" md={mdContent} >
+      <Input type={type}
+        invalid={touched && error ? true : false}
+        valid={touched && !error ? true : false}
+        id={name}
+        placeholder={placeholder}
+        {...input}
+        readOnly={readOnly} />
+      {touched && error && <FormFeedback>{error}</FormFeedback>}
+    </Col>
+  </FormGroup>
+)
+
+
+export const InlineSelectField = ({ mdLabel = 2, mdContent = 12 - mdLabel, name, readOnly, input, type, label, placeholder = label, options, meta: { touched, error } }) => (
+  <FormGroup row>
+    <Col md={mdLabel}>
+      <Label hidden={type === 'hidden' ? true : false || label === undefined || label === null}
+        htmlFor="{label}" style={{ marginTop: '8px' }}>
+        {label}
+      </Label>
+    </Col>
+    <Col xs="12" md={mdContent} >
+      <Input type="select"
+        invalid={touched && error ? true : false}
+        valid={touched && !error ? true : false}
+
+        {...input}
+        readOnly={readOnly}>
+        {
+          options
+        }
+      </Input>
+      {touched && error && <FormFeedback>{error}</FormFeedback>}
+    </Col>
+  </FormGroup>
 )
 
 
@@ -29,7 +75,7 @@ export const InlineField = ({ readOnly, input, label, type, meta: { touched, err
 export const SelectField = ({ readOnly, input, type, label, options, meta: { touched, error } }) => (
   <Col xs="12">
     <FormGroup>
-      <Label hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
+      <Label hidden={type === 'hidden' ? true : false || label === undefined || label === null} htmlFor="{label}">{label}</Label>
       <Input type="select" invalid={touched && error ? true : false} valid={touched && !error ? true : false} placeholder={label} {...input} readOnly={readOnly}>
         {
           options.map(option => (<option >{option.text}</option>))
@@ -46,13 +92,13 @@ export const SelectField = ({ readOnly, input, type, label, options, meta: { tou
 export const InputField = ({ readOnly = false, xs = 12, input, label, placeholder = label, type, meta: { touched, error, warning } }) => (
   <Col xs={xs}>
     <FormGroup>
-      <Label hidden={type === 'hidden' ? true : false || label == undefined || label == null} htmlFor="{label}">{label}</Label>
+      <Label hidden={type === 'hidden' ? true : false || label === undefined || label === null} htmlFor="{label}">{label}</Label>
       <Input {...input} type={type}
         invalid={touched && error ? true : false}
         valid={touched && !error ? true : false}
         placeholder={placeholder === undefined ? label : placeholder}
         readOnly={readOnly} />
-      {touched &&
+      {type !== 'hidden' && touched &&
         ((error && <FormFeedback>{error}</FormFeedback>) ||
           (warning && <FormFeedback>{warning}</FormFeedback>))}
     </FormGroup>

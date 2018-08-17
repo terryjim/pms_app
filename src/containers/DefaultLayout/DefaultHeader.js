@@ -27,8 +27,8 @@ class DefaultHeader extends Component {
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
         <AppNavbarBrand
-          full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
-          minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
+          full={{ src: logo, width: 89, height: 25, alt: '智生活' }}
+          minimized={{ src: sygnet, width: 30, height: 30, alt: '智生活' }}
         />
         <AppSidebarToggler className="d-md-down-none" display="lg" />
         <div style={{fontSize: 20,color:'#8bc34a'}}>&nbsp;&nbsp;&nbsp;&nbsp;物业管理平台——{this.props.user==null?'':this.props.user.companyName}</div>

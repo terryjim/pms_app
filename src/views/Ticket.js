@@ -9,7 +9,7 @@ import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
-
+import MyPagination from '../components/MyPagination'
 const CheckboxTable = checkboxHOC(ReactTable);
 class Ticket extends Component {
   componentWillMount() {
@@ -17,6 +17,7 @@ class Ticket extends Component {
     this.props.dispatch(clearEditedIds())
   }
   componentWillReceiveProps(nextProps) {
+    this.setState({ loading: false })
     //确认删除记录操作    
     if (nextProps.confirmDel) {
       this.props.dispatch(delList(this.state.selection, 'ticket'))
@@ -28,10 +29,6 @@ class Ticket extends Component {
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditTicket: false })
   }
-
-  componentWillUnmount() {
-
-  }
   constructor(props) {
     super(props);
     this.state = {
@@ -40,7 +37,7 @@ class Ticket extends Component {
       selection: [],
       edit: false,//是否为编辑状态
       selectAll: false,
-
+      loading: true
     };
   }
   toggleSelection = (key, shift, row) => {
@@ -123,32 +120,41 @@ class Ticket extends Component {
     sortable: false,
     width: 60,
     filterable: false,
-    Cell: (c) => (<div>
-      <a className="fa fa-check" style={{ fontSize: 20, color: '#00adff', alignItems: 'top' }}
+    Cell: (props) => (<div>
+      <a className="fa fa-check" style={{ fontSize: 15, color: '#00adff', alignItems: 'top' }}
         onClick={
           (e) => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
+            this.setState({ selection: [props.row.id] })
             this.props.dispatch(showConfirm('是否已处理完成选中的记录？', 'ticket', 'finish'))
           }
         }>
       </a>
       &nbsp;
-      <a className="fa fa-trash-o" style={{ fontSize: 20, color: '#FF5722', alignItems: 'top' }}
+      <a className="fa fa-remove" style={{ fontSize: 15, color: '#FF5722', alignItems: 'top' }}
         onClick={
           e => {
             e.stopPropagation()
-            this.setState({ selection: [c.row.id] })
+            this.setState({ selection: [props.row.id] })
             this.props.dispatch(showConfirm('是否删除选中记录？', 'ticket', 'del'))
           }
         }>
       </a>
     </div>)
   }, {
-    id: 'processState',
+    accessor: 'processState',
     Header: '状态',
     width: 80,
-    accessor: d => (d.processState === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>)
+    Cell: ({ value }) => (value === 0 ? <Badge className="mr-1" color="danger">未处理</Badge> : <Badge className="mr-1" color="success">已处理</Badge>),
+    Filter: ({ filter, onChange }) =>
+      <select
+        onChange={event => onChange(event.target.value)}
+        value={filter ? filter.value : "all"}
+      >
+        <option value={0}>未处理</option>
+        <option value={1}>已处理</option>
+        <option value="all">全部</option>
+      </select>,
   }, {
     id: 'ticketEvent',
     Header: '类型',
@@ -165,12 +171,15 @@ class Ticket extends Component {
   }, {
     id: 'location',
     Header: '地址',
-    width: 160,
+    width: 240,
     accessor: d => (d.location === undefined ? '' : d.location.projectName)
 
   }, {
     accessor: 'createdAt',
-    Header: '提交时间', width: 180,
+    Header: '提交时间', width: 160,
+    Filter: ({ filter, onChange }) =>
+    <Input type="date" onChange={event => onChange(event.target.value)} value={filter ? filter.value : ''} />
+
   }, {
     accessor: 'content',
     Header: '事由'
@@ -178,13 +187,7 @@ class Ticket extends Component {
     accessor: 'images',
     Header: '附件',
     show: false
-  }, /*{
-    //accessor: 'enabled',
-    id:'enabled',
-    Header: '状态',
-    width: 80,
-    accessor: d => (d.enabled ? ( <Badge color="primary">启用中</Badge>) : ( <Badge color="danger">已禁用</Badge>))
-  },*/
+  }
   ];
 
   render() {
@@ -197,27 +200,64 @@ class Ticket extends Component {
       toggleAll,
       selectType: "checkbox",
     }
-    const Tickets = this.props.Tickets
+    const tickets = this.props.tickets
     return (
       <div className="animated fadeIn">
-        <Button color="primary" size="sm" onClick={() => {
-          if (this.state.selection.length < 1)
-            alert('请选择要标记完成的记录！')
-          else
-            this.props.dispatch(showConfirm('是否已处理完成选中的记录？', 'ticket', 'finish'))
-        }}>标记完成</Button>
-        <Button color="danger" size="sm" onClick={() => {
-          if (this.state.selection.length < 1)
-            alert('请选择要删除的记录！')
-          else
-            this.props.dispatch(showConfirm('是否删除选中记录？', 'ticket', 'del'));
-        }}>删除</Button>
-        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={Tickets.content}
-          pages={Tickets.totalPages} columns={this.columns} defaultPageSize={5}/* defaultPageSize={window.TParams.defaultPageSize} */ filterable
+        <div style={{ marginBottom: '8px' }}>
+          <Button color="primary" size="sm" onClick={() => {
+            if (this.state.selection.length < 1)
+              alert('请选择要标记完成的记录！')
+            else
+              this.props.dispatch(showConfirm('是否已处理完成选中的' + this.state.selection.length + '条记录？', 'ticket', 'finish'))
+          }}><i className="fa fa-check" ></i>标记完成</Button>{' '}
+          <Button color="danger"
+            size="sm"
+            onClick={() => {
+              if (this.state.selection.length < 1)
+                alert('请选择要删除的记录！')
+              else
+                this.props.dispatch(showConfirm('是否删除选中的' + this.state.selection.length + '条记录？', 'ticket', 'del'));
+            }}>
+            <i className="fa fa-remove" ></i>&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;
+          </Button>
+        </div>
+        <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={tickets.content}
+          pages={tickets.totalPages} columns={this.columns}
+          defaultPageSize={window.TParams.defaultPageSize}
+          filterable
           className="-striped -highlight"
-
+          total={tickets.totalElements}
+          PaginationComponent={MyPagination}
+          loading={this.state.loading}
           /* onPageChange={(pageIndex) => this.props.dispatch(getTicket({page:pageIndex,size:10}))}  */
           manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          style={{
+            height: document.body.clientHeight - 220 // This will force the table body to overflow and scroll, since there is not enough room
+            , backgroundColor: '#FFFFFF'
+          }}
+
+          getTheadProps={() => {
+            return {
+              style: {
+                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
+              }
+            };
+          }}
+          getTheadThProps={() => {
+            return {
+              style: {
+                marginTop: '5px'
+              }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+              style: {
+                textAlign: "center"
+              }
+            };
+          }}
+
           onFetchData={(state, instance) => {
             let whereSql = []
             state.filtered.forEach(
@@ -235,12 +275,21 @@ class Ticket extends Component {
             this.props.dispatch(getList({ whereSql, page: state.page, size: state.pageSize, sort }, 'ticket'))
 
           }}
+
+
           getTrProps={
             (state, rowInfo, column, instance) => {
               let style = {}
-              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
-                style.background = '#c8e6c9';
+              if (rowInfo != undefined && this.state.selection.includes(rowInfo.row.id)) {
+                style.background = '#4DBD74'
+                style.color = '#FFFFFF'
               }
+              else
+                if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                  style.background = '#F86C6B'
+                  style.color = '#FFFFFF'
+                } else
+                  style = {}
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
@@ -248,13 +297,17 @@ class Ticket extends Component {
                 },
                 onClick: (e, handleOriginal) => {
                   if (e.ctrlKey) {
-                    this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
+                    if (this.state.selection.includes(rowInfo.row.id))
+                      this.setState({ selection: this.state.selection.filter(x => x !== rowInfo.row.id) })
+                    else
+                      this.setState({ selection: [rowInfo.row.id, ...this.state.selection] })
                   } else {
                     if (this.state.selection.includes(rowInfo.row.id))
                       this.setState({ selection: [] })
                     else
                       this.setState({ selection: [rowInfo.row.id] })
                   }
+
                 }
               }
             }
@@ -276,13 +329,13 @@ class Ticket extends Component {
 }
 //获取ticket记录集及修改记录ＩＤ数组
 const mapStateToProps = (state) => {
-  let Tickets = state.cList
+  let tickets = state.cList
   let success = state.success
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'ticket' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   let confirmFinish = state.confirm.module === 'ticket' && state.confirm.operate === 'finish' ? state.confirm.confirm : false
 
-  return { closeModal: success.show, Tickets, editedIds, confirmDel, confirmFinish }
+  return { closeModal: success.show, tickets, editedIds, confirmDel, confirmFinish }
 
 
 }

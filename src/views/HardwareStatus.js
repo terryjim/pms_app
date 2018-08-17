@@ -17,11 +17,15 @@ class HardwareStatus extends Component {
     this.state = {
       selection: [],
       selectAll: false,
+      loading: true
     };
   }
   componentDidMount() {
     this.props.dispatch(getList({}, 'hardware'))
 
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ loading: false })
   }
   toggleSelection = (key, shift, row) => {
     /* 
@@ -75,7 +79,7 @@ class HardwareStatus extends Component {
   columns = [
     {
       id: 'index',
-      Header: '', 
+      Header: '',
       filterable: false,
       width: 30,
       Cell: props => (props.viewIndex + 1)
@@ -86,20 +90,44 @@ class HardwareStatus extends Component {
       show: false,
     }, {
       accessor: 'title',
-      Header: '门禁名称', 
-      filterable: false,
+      Header: '门禁名称',
+      //filterable: false,
     }, {
       accessor: 'hardwareCode',
-      Header: '硬件编号', 
-      filterable: false,
+      Header: '硬件编号',
+      //filterable: false,
 
     }, {
-      id: 'status',
-      Header: '在线状态', filterable: false,
-      accessor: d => d.status === 1 ? <Badge value={d.status} className="mr-1" color="success">在线</Badge> : d.status === 2 ? <Badge className="mr-1" value={d.status} color="danger">不在线</Badge> : <Badge className="mr-1" value={0} color="info">未知状态</Badge>,
-      sortMethod: (a, b) => {
-        return a.props.value > b.props.value ? 1 : -1;
-      }
+      accessor: 'status',
+      Header: '在线状态', //filterable: false,
+      //accessor: d => d.status === 1 ? <Badge value={d.status} className="mr-1" color="success">在线</Badge> : d.status === 2 ? <Badge className="mr-1" value={d.status} color="danger">不在线</Badge> : <Badge className="mr-1" value={0} color="info">未知状态</Badge>,
+      Cell: ({ value }) => (value === 1 ? <Badge className="mr-1" color="success">在&nbsp;&nbsp;线</Badge> : value === 2 ? <Badge className="mr-1" color="danger">不在线</Badge> : <Badge className="mr-1" color="dark">未知状态</Badge>),
+      // accessor:'status',
+      /*  sortMethod: (a, b) => {
+         return a.props.value > b.props.value ? 1 : -1;
+       } */
+      Filter: ({ filter, onChange }) =>
+        <select
+          onChange={event => onChange(event.target.value)}
+          value={filter ? filter.value : "all"}
+        >
+          <option value="1">在线</option>
+          <option value="2">不在线</option>
+          <option value="3">未知状态</option>
+          <option value="all">全部</option>
+        </select>,
+      filterMethod: (filter, row) => {
+        if (filter.value === "all") {
+          return true;
+        }
+        if (filter.value === "1") {
+          return row['status'] === 1;
+        }
+        if (filter.value === "2") {
+          return row['status'] === 2;
+        }
+        return row['status'] !== 1 && row['status'] !== 2
+      },
     }, {
       accessor: 'updated',
       Header: '最新在线时间', filterable: false,
@@ -130,32 +158,44 @@ class HardwareStatus extends Component {
     }
     return (
       <div className="animated fadeIn">
-        <div><Button color="primary" size="sm" onClick={() => { this.props.dispatch(checkHardwareStatus()) }}>查询在线状态</Button>
-          <div className="-next" style={{ 'color': 'red', 'textAlign': 'right' }}>在线状态统计：总数量-{total}&nbsp;&nbsp;&nbsp;&nbsp;不在线-{notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;在线-{onlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;未知状态-{total - onlineHardwares - notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;</div></div>
+        <Row style={{ marginBottom: '8px' }}><Col md={6}><Button color="primary" size="sm"
+          onClick={() => { this.props.dispatch(checkHardwareStatus()) }}>查询在线状态</Button>
+          </Col><Col md={6}><div className="-next" style={{ 'color': 'red', 'textAlign': 'right' }}>
+            在线状态统计：总数量-{total}&nbsp;&nbsp;&nbsp;&nbsp;不在线-{notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;在线-{onlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;未知状态-{total - onlineHardwares - notOnlineHardwares}&nbsp;&nbsp;&nbsp;&nbsp;
+          </div></Col>
+          </Row>
+        
         <CheckboxTable ref={r => (this.checkboxTable = r)} keyField='id' data={hardwares.content} minRows={3}
           defaultPageSize={999}
           showPagination={false}
           columns={this.columns} filterable
           className="-striped -highlight"
+          loading={this.state.loading}
           style={{
-            height: document.body.clientHeight - 280 // This will force the table body to overflow and scroll, since there is not enough room
+            height: document.body.clientHeight -250
+            , backgroundColor: '#FFFFFF'
           }}
-          /*    manual // Forces table not to paginate or sort automatically, so we can handle it server-side
-             onFetchData={(state, instance) => {
-              // this.props.dispatch(checkHardwareStatus())
-              this.props.dispatch(getList({}, 'hardware'))   
-             }} */
-          getTrProps={
-            (state, rowInfo, column, instance) => {
-              let style = {}
-              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
-                style.background = '#c8e6c9';
+          getTheadProps={() => {
+            return {
+              style: {
+                height: '40px', boxShadow: '0px 1px 3px rgba(34, 25, 25, 0.5)',
               }
-              return {
-                style
+            };
+          }}
+          getTheadThProps={() => {
+            return {
+              style: {
+                marginTop: '5px'
               }
-            }
-          }
+            };
+          }}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+              style: {
+                textAlign: "center"
+              }
+            };
+          }}
           {...checkboxProps}
         />
 

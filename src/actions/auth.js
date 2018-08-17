@@ -25,7 +25,7 @@ export const login = ({ userName, password }) => dispatch => {
         .then(json => {
             dispatch(loaded())
             if (json.access_token != null && json.access_token != '') {
-                console.log('登录成功')
+                //console.log('登录成功')
                 window.sessionStorage.accessToken = 'Bearer ' + json.access_token               
                 return dispatch(logined({ token: 'Bearer ' + json.access_token, userName, propertyId: json.propertyId, propertyProjectId: json.propertyProjectId, companyName: json.companyName, expired: new Date().getTime() + 1000 * json.expires_in }))
             }          
@@ -57,15 +57,15 @@ export const chgPwd = ({ oldPassword, newPassword }) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
 
     headers.Authorization = window.sessionStorage.accessToken
-    console.log(window.sessionStorage.accessToken)
+    //console.log(window.sessionStorage.accessToken)
     let body = JSON.stringify({
         oldPassword, newPassword
     })
-    console.log(body)
+    //console.log(body)
     let args = { method: 'POST', mode: 'cors', headers: headers, body: body, cache: 'reload' }
     return fetch(window.TParams.urls.chgPwd, args).then(response => response.json())
         .then(json => {
-            console.log(json)
+            //console.log(json)
             if (json.result === 'success') {
                 alert('密码修改成功！')
                 return dispatch(loginOut())
@@ -76,7 +76,7 @@ export const chgPwd = ({ oldPassword, newPassword }) => dispatch => {
             }
             return ('网络异常，密码修改失败，请稍后再试！')
         }).catch(e => {
-            console.log(e);
+           // console.log(e);
             alert('网络异常，密码修改失败，请稍后再试！')
         }
         )
@@ -94,7 +94,7 @@ export const getUserInfo = () => dispatch => {
 
     return fetch(window.TParams.urls.getUserInfo, args).then(checkStatus).then(response => response.json())
         .then(json => {
-            console.log(json)
+          //  console.log(json)
             if (json.code !== 0)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             else {

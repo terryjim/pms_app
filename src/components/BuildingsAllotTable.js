@@ -98,7 +98,7 @@ class BuildingsAllotTable extends React.Component {
   columns = [{
     accessor: 'id',
     Header: 'id',
-    show: true,
+    show: false,
 
   }, {
     accessor: 'name',

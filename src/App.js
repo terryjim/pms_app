@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch,Redirect } from 'react-router-dom';
-import './App.css';
+
 // Styles
 // CoreUI Icons Set
 import '@coreui/icons/css/coreui-icons.min.css';

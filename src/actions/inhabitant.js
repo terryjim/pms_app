@@ -6,7 +6,6 @@ export const getInhabitantsByRoom = (values) =>dispatch=> {
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken
     let body = JSON.stringify(values)
-  
     let args = { method: 'POST', mode: 'cors', body,headers, cache: 'reload' }
     let getUrl = window.TParams.urls['getInhabitantsByRoom']
     return fetch(getUrl, args).then(response => response.json())
@@ -25,9 +24,7 @@ export const getInhabitantsByRoom = (values) =>dispatch=> {
         })
 }
 //新增或修改后的记录更新列表
-export const fillInhabitants = (location,values) => {
-    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`')
-    console.log(values)
+export const fillInhabitants = (location,values) => {   
     return {
         type: 'FILL_INHABITANTS_BY_ROOM',
         data: values,

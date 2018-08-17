@@ -3,30 +3,14 @@ import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField, FieldValidate } from '../components/Field'
+import { InputField, FieldValidate, InlineField, InlineSelectField } from '../components/Field'
 import { getBuildingsByDepartment } from '../actions/building'
-const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
-  <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
-)
-const checkField = ({ readOnly, input, label, value, meta: { touched, error } }) => (
-  <FormGroup row>
-    {/* <Label for="checkbox2" sm={2}>Checkbox</Label>*/}
-    <Col sm={{ size: 10 }}>
-      <FormGroup check>
-        <Label check>
-          <Input type="checkbox" />{' '}
-          {label}
-        </Label>
-      </FormGroup>
-    </Col>
-  </FormGroup>
-)
 
 const validate = values => {
   const errors = {}
-  if (values.endTime<values.startTime) {
+  if (values.endTime < values.startTime) {
     errors.endTime = '授权结束时间不得小于开始时间'
-  }  
+  }
   return errors
 }
 let EditOwnerCardForm = ({
@@ -35,81 +19,117 @@ let EditOwnerCardForm = ({
     dispatch(getBuildingsByDepartment())
   }
   return (
-    <form onSubmit={handleSubmit} >
+    <Form onSubmit={handleSubmit} ><Container style={{ 'textAlign': 'right' }}>
       <Field name="id" component="input" type="hidden" label="id" />
-      <Container><FormGroup row>
-        <Label sm={3} for="buildingId">楼栋号</Label>
-        <Col sm={9}>
-          <Field name="buildingId" component="select" validate={[FieldValidate.required]}>
-            <option value="">请选择楼栋</option>
-            {buildingList != undefined ?
-              buildingList.map((build, index) => (
-                <option value={build.id} key={index}>
-                  {build.name}
-                </option>
-              )) : ''}
+      <FormGroup row>
+        <Col md="6">
+          <Field name="buildingId"    validate={[FieldValidate.required]}
+            label="楼栋号"
+            component={InlineSelectField} 
+            options={[<option value="" key={-1}>请选择楼栋</option>].concat(
+              buildingList != undefined ?
+                buildingList.map((build, index) => (
+                  <option value={build.id} key={index}>
+                    {build.name}
+                  </option>
+                )) : [])}
+            mdLabel={4}
+          >
           </Field>
+          <Field
+            name="buildingId"
+            component={InputField}
+            type="hidden"
+            label=""
+            validate={[FieldValidate.required]}
+          />
         </Col>
-      </FormGroup></Container>
-      <Field
-        name="buildingId"
-        component={InputField}
-        type="hidden"
-        label=""
-        validate={[FieldValidate.required]}
-      />
-      <Field
-        name="location"
-        component={InputField}
-        type="text"
-        placeholder="按单元号-楼层号-房号格式输入"
-        validate={[FieldValidate.required, FieldValidate.room]}
-        label="房间号"
-      />
+        <Col md="6">
+          <Field
+            name="location"
+            component={InlineField}
+            type="text"
+            placeholder="单元号-楼层号-房号"
+            validate={[FieldValidate.required, FieldValidate.room]}
+            label="房间号"
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col>
+      </FormGroup>
 
-      <Field readOnly={readOnly}
-        name="title"
-        component={InputField}
-        type="text"
-        label="卡名称"
-        validate={[FieldValidate.required]}
-      />
-      <Field readOnly={readOnly}
-        name="code"
-        component={InputField}
-        type="text"
-        label="卡号"
-        validate={[FieldValidate.required]}
-      />
-      <Field readOnly={readOnly}
-        name="startTime"
-        component={InputField}
-        type="date"
-        label="授权开始时间"
-        validate={[FieldValidate.required]}
-      />
-      <Field readOnly={readOnly}
-        name="endTime"
-        component={InputField}
-        type="date"
-        label="授权结束时间"
-        validate={[FieldValidate.required]}
-      />
-      <Field readOnly={readOnly}
-        name="name"
-        component={InputField}
-        type="text"
-        readOnly={true}
-        label="业主姓名"
-      />
-      <Field readOnly={readOnly}
-        name="phone"
-        component={InputField}
-        type="text"
-        readOnly={true}
-        label="业主电话"
-      />
 
+
+      <FormGroup row>
+        <Col md="6">
+          <Field readOnly={readOnly}
+            name="title"
+            component={InlineField}
+            type="text"
+            label="卡名称"
+            validate={[FieldValidate.required]}
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col>
+        <Col md="6">
+          <Field readOnly={readOnly}
+            name="code"
+            component={InlineField}
+            type="text"
+            label="卡号"
+            validate={[FieldValidate.required]}
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col> </FormGroup>
+      <FormGroup row>
+        <Col md="6">
+          <Field readOnly={readOnly}
+            name="startTime"
+            component={InlineField}
+            type="date"
+            label="授权开始时间"
+            validate={[FieldValidate.required]}
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col><Col md="6">
+          <Field readOnly={readOnly}
+            name="endTime"
+            component={InlineField}
+            type="date"
+            label="授权结束时间"
+            validate={[FieldValidate.required]}
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col>
+      </FormGroup>
+      <FormGroup row>
+        <Col md="6">
+          <Field readOnly={readOnly}
+            name="name"
+            component={InlineField}
+            type="text"
+            readOnly={true}
+            label="业主姓名"
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col>
+        <Col md="6">
+          <Field readOnly={readOnly}
+            name="phone"
+            component={InlineField}
+            type="text"
+            readOnly={true}
+            label="业主电话"
+            mdLabel={4}
+            mdContent={8}
+          />
+        </Col>
+      </FormGroup>
 
 
       <Row className="align-items-center">
@@ -121,8 +141,8 @@ let EditOwnerCardForm = ({
           <Button block color="danger" onClick={closeForm}>关闭</Button>
         </Col>
       </Row>
-
-    </form>
+    </Container>
+    </Form>
   );
 }
 
@@ -152,7 +172,7 @@ const mapStateToProps = (state) => {
   let location = ''
   if (state.cForm.data !== undefined && state.cForm.data !== null && state.cForm.data.location !== undefined)
     location = JSON.stringify(state.cForm.data.location)
-  return { initialValues: { ...state.cForm.data, title, isManage: 1, startTime,endTime }, buildingList }
+  return { initialValues: { ...state.cForm.data, title, isManage: 1, startTime, endTime }, buildingList }
 }
 Date.prototype.Format = function (fmt) { //author: meizz
   var o = {

@@ -85,7 +85,7 @@ class Hotline extends Component {
   }, {
     accessor: 'hotline',
     Header: '管家客服'
-  }, 
+  },
   ];
 
   render() {
@@ -96,6 +96,13 @@ class Hotline extends Component {
     return (
       <div className="animated fadeIn">
         <CheckboxTable ref={r => (this.checkboxTable = r)}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+            style: {               
+                textAlign:"center"
+              }
+            };
+          }}
           keyField='id'
           className="-striped -highlight"
           data={hotlines.content}
@@ -129,11 +136,11 @@ class Hotline extends Component {
             }} */
           getTrProps={
             (state, rowInfo, column, instance) => {
-              let style = {}             
+              let style = {}
               if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
                 style.color = 'red'
                 // style.background = '#62c2de'                 
-              }            
+              }
               return {
                 style, onDoubleClick: (e, handleOriginal) => {
                   this.props.dispatch(fillForm(rowInfo.row));
