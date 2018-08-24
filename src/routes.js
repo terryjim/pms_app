@@ -230,7 +230,7 @@ const routes = [
   { path: '/inhabitant/ownerCards', name: '门禁卡管理', component:OwnerCards },
   { path: '/inhabitant/owners', name: '业主列表', component: Owners },
   { path: '/owner/companies', name: '企业列表', component: Companies },
-  { path: '/property/hotlines', name: '客服管理', component: Hotlines },
+  { path: '/property/hotlines', name: '客服热线', component: Hotlines },
   { path: '/property/notice', name: '公告管理', component: Notices },
   { path: '/property/ticket', name: '物业报修', component: Tickets },
   { path: '/property/CardManaged', name: '物业卡管理', component: CardManaged },

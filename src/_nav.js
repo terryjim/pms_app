@@ -93,7 +93,7 @@ export default {
           icon: ["icon-location-pin","right-padding"],
         },
         {
-          name: '　客服管理',
+          name: '　客服热线',
           url: '/property/hotlines',
           icon: ["icon-location-pin","right-padding"],
         },
@@ -110,7 +110,7 @@ export default {
 
 
 
-
+/* 
     {
       title: true,
       name: 'Theme',
@@ -369,7 +369,7 @@ export default {
       url: 'http://coreui.io/pro/react/',
       icon: 'icon-layers',
       variant: 'danger',
-    },
+    }, */
 
   ],
 };

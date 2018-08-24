@@ -1,5 +1,5 @@
-const defaultUrl = "http://118.31.72.47:9001/"
-//const defaultUrl = "http://192.168.10.153:9001/"
+//const defaultUrl = "http://118.31.72.47:9001/"
+const defaultUrl = "http://192.168.10.153:9001/"
 const TParams = {
     defaultUrl:defaultUrl,
     defaultPageSize: 20,

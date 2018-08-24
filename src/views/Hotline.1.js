@@ -10,7 +10,6 @@ import ReactTable from "react-table";
 import checkboxHOC from "react-table/lib/hoc/selectTable";
 import 'react-table/react-table.css'
 import MyPagination from '../components/MyPagination'
-import BuildingWidget from '../components/BuildingWidget'
 const CheckboxTable = checkboxHOC(ReactTable);
 class Hotline extends Component {
   componentWillMount() {
@@ -34,9 +33,7 @@ class Hotline extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.dispatch(getHotlines({ whereSql: '', page: 0, size: 999 }))
-  }
+
   //切换编辑窗口状态（开、闭）
   toggleShowEditHotline = () => {
     this.setState({
@@ -57,10 +54,6 @@ class Hotline extends Component {
   }
   submit = (values) => {
     this.props.dispatch(setHotline(values))
-  }
-  editHotline = (h) => {
-    this.props.dispatch(fillForm(h))　　/* 获取当前行信息填充到编辑表单 */
-    this.setState({ showEditHotline: true, edit: true })
   }
   columns = [{
     accessor: 'id',
@@ -100,23 +93,65 @@ class Hotline extends Component {
     const checkboxProps = {
       selectType: "checkbox",
     }
-
     return (
       <div className="animated fadeIn">
-        <Row>
-          {hotlines.content === undefined ? '' : hotlines.content.map(h => (
-            <Col xs="12" sm="6" lg="3">
-              <BuildingWidget
-                key={h.id}
-                title={h.name}
-                mainText={h.hotline}
-                color={h.hotline === undefined || h.hotline === null||h.hotline==='' ? "danger" : "primary"}
-                variant="0"
-                action={()=>this.editHotline(h)}
-              />
-            </Col>
-          ))}
-        </Row>
+        <CheckboxTable ref={r => (this.checkboxTable = r)}
+          getTdProps={(state, rowInfo, column) => {
+            return {
+            style: {               
+                textAlign:"center"
+              }
+            };
+          }}
+          keyField='id'
+          className="-striped -highlight"
+          data={hotlines.content}
+          columns={this.columns}
+          pages={hotlines.totalPages}
+          total={hotlines.totalElements}
+          //otherInfo="测试测试测试其它数据测试测试测试其它数据测试测试测试其它数据"
+          defaultPageSize={window.TParams.defaultPageSize} filterable
+          PaginationComponent={MyPagination}
+          loading={this.state.loading}
+          style={{
+            height: document.body.clientHeight - 180 // This will force the table body to overflow and scroll, since there is not enough room
+          }}
+          manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+          onFetchData={(state, instance) => {
+            let whereSql = ''
+            state.filtered.forEach(
+              v => {
+                whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
+              }
+            )
+            this.setState({ loading: true })
+            this.props.dispatch(getHotlines({ whereSql, page: state.page, size: state.pageSize }))
+          }}
+          /*   getPaginationProps= {() => {           
+              return {
+                style: {
+                  background:  "red"
+                }
+              };
+            }} */
+          getTrProps={
+            (state, rowInfo, column, instance) => {
+              let style = {}
+              if ((this.props.editedIds != undefined) && rowInfo != undefined && this.props.editedIds.includes(rowInfo.row.id)) {
+                style.color = 'red'
+                // style.background = '#62c2de'                 
+              }
+              return {
+                style, onDoubleClick: (e, handleOriginal) => {
+                  this.props.dispatch(fillForm(rowInfo.row));
+                  this.setState({ showEditHotline: true, edit: false })
+                }
+              }
+            }
+          }
+          {...checkboxProps}
+
+        />
 
         <TopModal isOpen={this.state.showEditHotline} toggle={() => this.toggleShowEditHotline()}
           className={'modal-primary ' + this.props.className}>

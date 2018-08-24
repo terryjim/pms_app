@@ -40,7 +40,8 @@ let EditHotlineForm = props => {
           component={InputField}
           placeholder="客服电话"         
           label="客服电话"
-          validate={[FieldValidate.required,FieldValidate.phone]}
+          validate={[FieldValidate.phone]}
+         /*  validate={[FieldValidate.required,FieldValidate.phone]} */
           readOnly={readOnly}
         />
 
