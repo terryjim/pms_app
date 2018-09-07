@@ -22,7 +22,8 @@ const TParams = {
         getBuildingsByProject: defaultUrl + 'building/getBuildingsByProject',  //根据楼盘id获取所辖楼栋列表
         setHotline:defaultUrl+'building/setHotline',//设置客服号码
         getHotlines:defaultUrl+'building/getHotlines',//获取客服号码列表
-
+        setMsgPhone:defaultUrl+'department/setMsgPhone',//设置短信接收电话
+        getMsgPhone:defaultUrl+'department/getMsgPhone',//获取短信接收电话
         save_admin: defaultUrl + 'admin/save',
         del_admin: defaultUrl + 'admin/del',
 

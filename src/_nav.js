@@ -105,9 +105,12 @@ export default {
           name: '　门禁卡状态监控',
           url: '/property/HardwareStatus',
           icon: ["icon-location-pin","right-padding"],
+        }, {
+          name: '　消息接收设置',
+          url: '/property/MsgPhone',
+          icon: ["icon-location-pin","right-padding"],
         }]
     },
-
 
 
 /* 

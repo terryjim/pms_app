@@ -133,4 +133,8 @@ export class FieldValidate {
   static rooms = value => (value && !/^\w+\-\w+\-\w+(,\w+\-\w+\-\w+)*$/i.test(value)
     ? '房号格式不对'
     : undefined)
+      //门禁卡格式8位16进制
+  static card = value => (value && !/^([0-9a-fA-F]){8}$/i.test(value)
+  ? '门禁卡格式不对'
+  : undefined)
 }

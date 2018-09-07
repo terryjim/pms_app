@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds, clearCList } from '../actions/common'
-import { Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { Badge,Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditBuildingForm from '../forms/EditBuildingForm'
 import TopModal from '../components/TopModal'
 import ReactTable from "react-table";
@@ -65,7 +65,25 @@ class Owner extends Component {
         return location.unit + '-' + location.floor + '-' + location.room
       } catch (e) { return '' }
     },
+  },
+  {
+    accessor: 'isDeleted',
+    Header: '状态',
+    width: 80,
+    Cell: ({ value }) => (value ? <Badge className="mr-1" color="danger">已删除</Badge> :''),
+    Filter: ({ filter, onChange }) =>
+      <select
+        onChange={event => onChange(event.target.value)}
+        value={filter ? filter.value : ''}
+      >
+        <option value={0}>正常</option>
+        <option value={1}>已删除</option>
+        <option value=''>全部</option>
+      </select>,
   }
+
+
+
   ];
 
   render() {
@@ -117,7 +135,9 @@ class Owner extends Component {
                 } else if (v.id === 'category') {
                   if (v.value !== '0')
                     whereSql += ' and category=' + v.value
-                }
+                }  else if (v.id === 'isDeleted') {                  
+                    whereSql += ' and isDeleted=' + v.value
+                } 
                 else
                   whereSql += ' and ' + v.id + ' like \'%' + v.value + '%\''
               }
@@ -129,7 +149,7 @@ class Owner extends Component {
                 else if (v.id === 'location')
                   whereSql += ` order by JSON_EXTRACT(location,'$[0].unit') ${v.desc ? " desc" : " asc"},
                    JSON_EXTRACT(location,'$[0].floor') ${v.desc ? " desc" : " asc"},
-                   JSON_EXTRACT(location,'$[0].room') ${v.desc ? " desc" : " asc"}`                   
+                   JSON_EXTRACT(location,'$[0].room') ${v.desc ? " desc" : " asc"}`
                 else
                   whereSql += ' order by  ' + v.id + (v.desc ? " desc" : " asc")
               }

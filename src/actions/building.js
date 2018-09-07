@@ -42,18 +42,14 @@ export const getBuildingListResult = (json) => (
 //设置楼栋客服电话
 export const setHotline = (values) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
-    headers.Authorization = window.sessionStorage.accessToken
-    console.log(values)
-    let body = JSON.stringify(values)
-    console.log(body)
+    headers.Authorization = window.sessionStorage.accessToken  
+    let body = JSON.stringify(values)   
     let args = { method: 'POST', mode: 'cors', headers: headers, body, cache: 'reload' }
     let saveUrl = window.TParams.urls['setHotline']
     dispatch(loading())
     return fetch(saveUrl, args).then(response => response.json())
         .then(json => {
-            dispatch(loaded())
-            console.log(json)
-            console.log(json.data)
+            dispatch(loaded())           
             if (json.code !== 0) {
                 console.log(json.msg)
                 return dispatch(showError(json.msg + '<br>' + json.data))
@@ -82,8 +78,7 @@ export const getHotlines = ({ whereSql, page, size,orderBy}) => dispatch => {
     let getUrl = window.TParams.urls['getHotlines']
     
     return fetch(getUrl, args).then(checkStatus).then(response => response.json())
-        .then(json => {
-            console.log(json)
+        .then(json => {            
             if (json.code !== 0)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             else

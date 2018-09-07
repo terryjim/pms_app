@@ -78,7 +78,7 @@ let EditOwnerCardForm = ({
             component={InlineField}
             type="text"
             label="卡号"
-            validate={[FieldValidate.required]}
+            validate={[FieldValidate.required,FieldValidate.card]}
             mdLabel={4}
             mdContent={8}
           />

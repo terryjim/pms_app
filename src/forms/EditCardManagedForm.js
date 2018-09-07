@@ -3,8 +3,11 @@ import { Field, reduxForm, change, FieldArray } from 'redux-form';
 import { Container, ListGroup, CardFooter, Label, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { connect } from 'react-redux'
 import { showError } from '../actions/common'
-import { InputField } from '../components/Field'
 import BuildingsAllotTable from '../components/BuildingsAllotTable.js'
+import { InputField, FieldValidate, InlineField, InlineSelectField } from '../components/Field'
+
+
+
 
 const simpleField = ({ readOnly, input, label, type, meta: { touched, error } }) => (
   <Input type={type} invalid={touched && error ? true : false} valid={touched && !error ? true : false} id="name" placeholder={label} {...input} readOnly={readOnly} />
@@ -62,6 +65,7 @@ let EditCardManagedForm = props => {
         component={InputField}
         type="text"
         label="卡号"
+        validate={[FieldValidate.required,FieldValidate.card]}
       /> <Field readOnly={readOnly}
         name="isManage"
         component={InputField}
