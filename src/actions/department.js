@@ -1,5 +1,5 @@
 import { loaded, loading, showError, checkStatus, showSuccess, addToGrid, getListResult } from "./common";
-
+import {loginOut} from "./auth"
 
 
 //设置短信接收号码
@@ -19,10 +19,11 @@ export const setMsgPhone = (values) => dispatch => {
             else {
                 dispatch(showSuccess('保存成功！'))
                 //回传添加或修改后的记录    
-                dispatch(addToGrid(json.data))
+               // dispatch(addToGrid(json.data))
                 //回传添加或修改后的记录id,用于页面标识修改痕迹
                 //alert(json.data.id)
                 // dispatch(addEditedIds([json.data.id]))
+                dispatch(loginOut())
             }
         }).catch(e => {
             dispatch(loaded())

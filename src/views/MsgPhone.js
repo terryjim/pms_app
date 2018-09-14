@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { showConfirm, closeConfirm, getList, saveForm, fillForm, delList } from '../actions/common'
 import { clearEditedIds } from '../actions/common'
+import {loginOut} from "../actions/auth"
 import { Badge, Alert, Row, Col, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, CardHeader, CardBody, Form, FormGroup, InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import EditMsgPhoneForm from '../forms/EditMsgPhoneForm'
 import TopModal from '../components/TopModal'
@@ -21,6 +22,7 @@ class MsgPhone extends Component {
     this.setState({ loading: false })
     if (nextProps.closeModal)    //保存成功后关闭表单窗口
       this.setState({ showEditMsgPhone: false })
+     
   }
   constructor(props) {
     super(props);

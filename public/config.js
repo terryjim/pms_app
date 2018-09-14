@@ -1,12 +1,12 @@
-//const defaultUrl = "http://118.31.72.47:9001/"
-const defaultUrl = "http://192.168.10.153:9001/"
+const defaultUrl = "http://118.31.72.47:9001/"
+//const defaultUrl = "http://192.168.10.153:9001/"
 const TParams = {
     defaultUrl:defaultUrl,
     defaultPageSize: 20,
     urls: {
         getUserInfo: defaultUrl + 'user/getUserInfo',//获取用户详细信息
         // get_oss_params: defaultUrl + 'oss/getParams',//获取阿里oss参数设置
-        login: defaultUrl + 'auth/login',
+        login: defaultUrl + 'auth/login',      
         chgPwd: defaultUrl + 'auth/chgPwd',
         getInhabitantsByRoom: defaultUrl + 'inhabitant/getByRoom',//根据房号获取居客信息
         getBuildingsByDepartment: defaultUrl + 'building/getListByDepartment',//根据当前用户获取楼栋下拉框列表

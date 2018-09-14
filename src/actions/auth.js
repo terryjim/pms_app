@@ -26,21 +26,22 @@ export const login = ({ userName, password }) => dispatch => {
             dispatch(loaded())
             if (json.access_token != null && json.access_token != '') {
                 //console.log('登录成功')
-                window.sessionStorage.accessToken = 'Bearer ' + json.access_token               
+                window.sessionStorage.accessToken = 'Bearer ' + json.access_token
                 return dispatch(logined({ token: 'Bearer ' + json.access_token, userName, propertyId: json.propertyId, propertyProjectId: json.propertyProjectId, companyName: json.companyName, expired: new Date().getTime() + 1000 * json.expires_in }))
-            }          
+            }
         }).catch(error => {
             dispatch(loaded())
-            if(error.response===undefined){
-                return dispatch(showError('远程服务器连接异常，请稍后再试！<br/>' ))         
+            if (error.response === undefined) {
+                return dispatch(showError('远程服务器连接异常，请稍后再试！<br/>'))
             }
-            if (error.response.status === 500) {                
-                return dispatch(showError('用户名或密码错误（或该用户已被禁用），请重新登录！'))    
+            if (error.response.status === 500) {
+                return dispatch(showError('用户名或密码错误（或该用户已被禁用），请重新登录！'))
             }
-            return dispatch(showError('其它异常，请稍后再试！<br/>' + error))           
+            return dispatch(showError('其它异常，请稍后再试！<br/>' + error))
         }
         )
 }
+
 export const loginOut = () => {
     window.sessionStorage.accessToken = ''
     return (
@@ -76,7 +77,7 @@ export const chgPwd = ({ oldPassword, newPassword }) => dispatch => {
             }
             return ('网络异常，密码修改失败，请稍后再试！')
         }).catch(e => {
-           // console.log(e);
+            // console.log(e);
             alert('网络异常，密码修改失败，请稍后再试！')
         }
         )
@@ -94,7 +95,7 @@ export const getUserInfo = () => dispatch => {
 
     return fetch(window.TParams.urls.getUserInfo, args).then(checkStatus).then(response => response.json())
         .then(json => {
-          //  console.log(json)
+            //  console.log(json)
             if (json.code !== 0)
                 return dispatch(showError(json.msg + '<br>' + json.data))
             else {
