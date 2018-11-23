@@ -66,7 +66,7 @@ let EditCompanyForm = props => {
           placeholder="六位及以上英文（不区分大小写）和数字组成"
           type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
           label="企业空间名称"
-          validate={[FieldValidate.required,FieldValidate.minLength6]}
+          validate={(initialValues!=undefined&&initialValues.owner!=undefined)?[]:[FieldValidate.required,FieldValidate.minLength6]}
           readOnly={initialValues!=undefined&&initialValues.owner!=undefined}
         />
         <Container><FormGroup row>
@@ -103,7 +103,7 @@ let EditCompanyForm = props => {
           name="manager"
           component={InputField}
           type={(initialValues!=undefined&&initialValues.owner!=undefined)?"hidden":"text"}
-          validate={[FieldValidate.required]}
+          validate={(initialValues!=undefined&&initialValues.owner!=undefined)?[]:[FieldValidate.required]}         
           label="管理员"
           
         />

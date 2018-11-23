@@ -102,7 +102,7 @@ export default {
           url: '/property/CardManaged',
           icon: ["icon-location-pin","right-padding"],
         }, {
-          name: '　门禁卡状态监控',
+          name: '　门禁设备状态监控',
           url: '/property/HardwareStatus',
           icon: ["icon-location-pin","right-padding"],
         }, {

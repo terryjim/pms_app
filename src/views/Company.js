@@ -99,8 +99,7 @@ class Company extends Component {
       showDanger: !this.state.showDanger,
     });
   }
-  submit = (values) => {
-
+  submit = (values) => {    
     this.props.dispatch(saveForm(values, 'company'))
     //this.setState({ showEditCompany: false })
   }
@@ -327,7 +326,7 @@ const mapStateToProps = (state) => {
   let vOwners = state.cList
   let success = state.success
 
-  console.log(vOwners)
+ // console.log(vOwners)
   let editedIds = state.editedIds
   let confirmDel = state.confirm.module === 'company' && state.confirm.operate === 'del' ? state.confirm.confirm : false
   return { closeModal: success.show, vOwners, editedIds, confirmDel }

@@ -90,9 +90,14 @@ class HardwareStatus extends Component {
       show: false,
     }, {
       accessor: 'title',
-      Header: '门禁名称',
+      Header: '位置信息',
       //filterable: false,
-    }, {
+    }, 
+    {
+      accessor: 'name',
+      Header: '名称',
+      //filterable: false,
+    },{
       accessor: 'hardwareCode',
       Header: '硬件编号',
       //filterable: false,
