@@ -54,6 +54,12 @@ const MsgPhone=Loadable({
   loader: () => import('./views/MsgPhone'),
   loading: Loading,
 })
+const EntranceLog=Loadable({
+  loader: () => import('./views/EntranceLog'),
+  loading: Loading,
+})
+
+
 /////////////////
 
 const Breadcrumbs = Loadable({
@@ -238,6 +244,8 @@ const routes = [
   { path: '/property/ticket', name: '物业报修', component: Tickets },
   { path: '/property/CardManaged', name: '物业卡管理', component: CardManaged },
   { path: '/property/HardwareStatus', name: '门禁设备状态', component: HardwareStatus },
+  { path: '/inhabitant/entranceLog', name: '出入记录', component: EntranceLog },
+
   { path: '/property/MsgPhone', name: '消息接收设置', component: MsgPhone },
   { path: '/theme', exact: true, name: 'Theme', component: Colors },
   { path: '/theme/colors', name: 'Colors', component: Colors },

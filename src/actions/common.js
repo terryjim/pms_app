@@ -123,7 +123,7 @@ export const getList = ({ whereSql, page, size, sort }, module) => dispatch => {
     let headers = { 'Content-Type': 'application/json' };
     headers.Authorization = window.sessionStorage.accessToken
     //orderBy
-    let body = JSON.stringify({ whereSql, page, size, sort })
+    let body = JSON.stringify({ whereSql, page, size, sort })   
     let args = { method: 'POST', mode: 'cors', body, headers: headers, cache: 'reload' }
     let getUrl = window.TParams.urls['get_' + module + '_list']
     if (getUrl == undefined || getUrl === '')

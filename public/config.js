@@ -1,5 +1,5 @@
-//const defaultUrl = "http://118.31.72.47:9001/"
-const defaultUrl = "http://localhost:9001/"
+const defaultUrl = "http://118.31.72.47:9001/"
+//const defaultUrl = "http://192.168.10.153:9001/"
 const TParams = {
     defaultUrl:defaultUrl,
     defaultPageSize: 20,
@@ -32,7 +32,9 @@ const TParams = {
         markTicketCompleted:defaultUrl + 'ticket/markCompleted',//标记工单完成
         get_hardware_list:defaultUrl + 'accessControlStatus/getAllByDepartment',//获取门禁硬件列表
         getHardwareStatus:defaultUrl + 'accessControlStatus/getStatus',//获取门禁硬件在线状态
-    }
+    },
+    openMode: [{ 'id': 1, 'name': '蓝牙' }, { 'id': 2, 'name': '二维码' },{'id':3,'name':'业主卡'},{'id':4,'name':'物业卡'},{'id':5,'name':'远程'}]
+
 }
 window.TParams = TParams
 

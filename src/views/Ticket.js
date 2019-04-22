@@ -175,6 +175,18 @@ class Ticket extends Component {
     accessor: d => (d.location === undefined ? '' : d.location.projectName)
 
   }, {
+    id: 'buildingName',
+    Header: '楼栋',
+    width: 100,
+    accessor: d => (d.location === undefined ? '' : d.location.buildingName)
+
+  }, {
+    id: 'room',
+    Header: '房号',
+    width: 100,
+    accessor: d => (d.location === undefined ? '' : d.location.room)
+
+  }, {
     accessor: 'createdAt',
     Header: '提交时间', width: 160,
     Filter: ({ filter, onChange }) =>
@@ -315,7 +327,7 @@ class Ticket extends Component {
           {...checkboxProps}
         />
 
-        <TopModal isOpen={this.state.showEditTicket} toggle={() => this.toggleShowEditTicket()}
+        <TopModal  style={{ "maxWidth": "750px" }} isOpen={this.state.showEditTicket} toggle={() => this.toggleShowEditTicket()}
           className={'modal-primary ' + this.props.className}>
           <ModalHeader toggle={() => this.toggleShowEditTicket()}>物业报修</ModalHeader>
           <ModalBody>

@@ -102,6 +102,10 @@ export default {
           url: '/property/CardManaged',
           icon: ["icon-location-pin","right-padding"],
         }, {
+          name: '　出入记录',
+          url: '/inhabitant/entranceLog',
+          icon:["icon-layers","right-padding"],
+        }, {
           name: '　门禁设备状态监控',
           url: '/property/HardwareStatus',
           icon: ["icon-location-pin","right-padding"],
